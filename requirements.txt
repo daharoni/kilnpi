@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+matplotlib
+numpy
+rpi.gpio
+sqlite3
