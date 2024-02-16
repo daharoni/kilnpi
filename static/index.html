@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kiln Controller</title>
+    <!-- Add Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script> 
+</head>
+<body>
+    <h1>Kiln Controller</h1>
+    <select id="profileSelector" onchange="fetchFiringData()">
+        <!-- Options will be populated by script.js -->
+    </select>
+    <div id="dataDisplay">
+        <!-- Firing data will be displayed here -->
+    </div>
+    <canvas id="firingChart"></canvas> <!-- Canvas for plotting -->
+</body>
+</html>

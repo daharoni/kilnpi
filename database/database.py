@@ -48,13 +48,23 @@ def list_firing_profiles():
     conn.close()
     return [dict(profile) for profile in profiles]
 
-def get_firing_profile(profile_name: str):
+""" def get_firing_profile(profile_name: str):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM firing_profiles WHERE profile_name = ?", (profile_name,))
     profile = cursor.fetchone()
     conn.close()
-    return dict(profile) if profile else None
+    return dict(profile) if profile else None """
+# Placeholder functions for database interactions
+
+def get_firing_profiles():
+    # Simulate fetching profiles from a database
+    return [{"id": 1, "name": "Profile A"}, {"id": 2, "name": "Profile B"}]
+
+def get_past_firing_data(profile_id: int):
+    # Simulate fetching past firing data based on profile_id
+    return {"id": profile_id, "data": [200, 400, 600, 800, 1000]}
+
 
 # Call init_db() to initialize the database at the start of your application
 init_db()
