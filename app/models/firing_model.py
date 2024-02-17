@@ -1,17 +1,12 @@
 from pydantic import BaseModel
+from typing import List
 
-class FiringOptions(BaseModel):
-    profile_name: str
-    temperature_target: float
-    hold_time: int
+class TemperatureProfilePoint(BaseModel):
+    time: int  # Assuming time is measured in minutes or a similar discrete unit
+    temperature: float  # Temperature at the given time
 
 class FiringProfile(BaseModel):
     id: int
     name: str
-    temperature_target: float  # Target temperature in degrees Celsius
-    hold_time: int  # Hold time at target temperature in minutes
-    ramp_up_rate: float = None  # Degrees Celsius per hour (optional)
-    ramp_down_rate: float = None  # Degrees Celsius per hour (optional)
-
-    class Config:
-        orm_mode = True
+    max_temperature: float
+    temperature_profile: List[TemperatureProfilePoint]

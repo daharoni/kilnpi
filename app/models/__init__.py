@@ -1,2 +1,2 @@
-from .firing_model import FiringOptions, FiringProfile
+from .firing_model import FiringProfile
 from .sensor_model import TemperatureData
