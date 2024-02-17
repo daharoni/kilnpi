@@ -8,7 +8,6 @@ from app.services.websocket_manager import connections, broadcast
 from app.services.temperature_sampling import poll_temperature_sensor
 
 app = FastAPI()
-connections: List[WebSocket] = []  # Keep track of active connections
 
 app.include_router(sensor.router)
 app.include_router(firing.router)
