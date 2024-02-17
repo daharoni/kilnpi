@@ -2,3 +2,5 @@ fastapi
 uvicorn
 matplotlib
 numpy
+pytest
+requests
