@@ -1,5 +1,5 @@
 # Import your function to load profiles
-from your_project.database import load_firing_profiles, get_profile_by_id
+from database import load_firing_profiles, get_profile_by_id
 
 def test_load_firing_profiles():
     profiles = load_firing_profiles()
