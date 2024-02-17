@@ -141,6 +141,37 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPastFirings() {
           // Placeholder for fetching past firings
         },
+        initWebSocket() {
+          const ws = new WebSocket("ws://localhost:8000/ws/temperature"); // Adjust URL to your WebSocket endpoint
+          ws.onopen = () => {
+            console.log("WebSocket connection established");
+        };
+        
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+        
+        ws.onclose = () => {
+            console.log("WebSocket connection closed");
+        };
+          ws.onmessage = (event) => {
+              const data = JSON.parse(event.data);
+              console.log(data.timestamp);
+              this.updateChart(data.temperature, data.timestamp);
+          };
+      },
+
+        updateChart(temperature, timestamp) {
+            // Assuming your temperature data includes a timestamp in a format suitable for the chart's x-axis
+            if (this.chart) {
+                const label = new Date(timestamp).toLocaleTimeString();
+                this.chart.data.labels.push(label); // Add timestamp to labels
+                this.chart.data.datasets.forEach((dataset) => {
+                    dataset.data.push(temperature); // Add temperature to dataset
+                });
+                this.chart.update();
+            }
+        },
       },
       watch: {
         selectedProfileId(newVal, oldVal) {
@@ -152,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mounted() {
         this.fetchProfiles();
         this.initEmptyChart();
+        this.initWebSocket();
         // Additional mounted logic, e.g., fetching current temperature, can go here
       }
     }).mount('#app');

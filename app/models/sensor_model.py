@@ -1,5 +1,7 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 class TemperatureData(BaseModel):
     temperature: float
-    timestamp: str
+    flags: int
+    timestamp: datetime

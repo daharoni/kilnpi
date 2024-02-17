@@ -1,1 +1,2 @@
 from .profiles import get_firing_profiles, get_profile_by_id
+from .temperature_sampling import poll_temperature_sensor

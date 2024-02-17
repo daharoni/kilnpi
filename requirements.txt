@@ -1,5 +1,7 @@
 fastapi
 uvicorn
+websockets
+wsproto
 matplotlib
 numpy
 pytest
@@ -7,3 +9,4 @@ pytest-cov
 requests
 httpx
 sqlalchemy
+spidev

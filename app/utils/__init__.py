@@ -1,0 +1,1 @@
+from .global_state import last_temperature, temperature_lock

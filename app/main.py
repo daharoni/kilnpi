@@ -1,16 +1,36 @@
 # No need to import sqlite3 here
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
 from app.routers import sensor, firing
+import asyncio
+from typing import List
+from app.services.websocket_manager import connections, broadcast
+from app.services.temperature_sampling import poll_temperature_sensor
 
 app = FastAPI()
+connections: List[WebSocket] = []  # Keep track of active connections
 
 app.include_router(sensor.router)
 app.include_router(firing.router)
 
+@app.websocket("/ws/temperature")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    connections.append(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            # Handle incoming message (if necessary)
+    except Exception as e:
+        connections.remove(websocket)
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(poll_temperature_sensor())
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
