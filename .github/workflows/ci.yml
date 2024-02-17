@@ -33,3 +33,6 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         slug: daharoni/kilnpi
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: true
