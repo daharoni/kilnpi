@@ -3,5 +3,7 @@ uvicorn
 matplotlib
 numpy
 pytest
+pytest-cov
 requests
 httpx
+
