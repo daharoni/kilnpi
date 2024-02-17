@@ -5,21 +5,6 @@ from sqlite3 import Connection
 
 DATABASE_URL = "data/sqlite.db"
 
-def load_firing_profiles() -> List[Dict[str, Any]]:
-    with open('data/firing_profiles.json') as f:
-        return json.load(f)
-
-def get_firing_profiles() -> List[Dict[str, Any]]:
-    return load_firing_profiles()
-
-def get_profile_by_id(profile_id: int) -> Dict[str, Any]:
-    profiles = load_firing_profiles()
-    for profile in profiles:
-        if profile['id'] == profile_id:
-            return profile
-    return None
-
-
 def get_db_connection() -> Connection:
     conn = sqlite3.connect(DATABASE_URL)
     conn.row_factory = sqlite3.Row  # This enables column access by name: row['column_name']

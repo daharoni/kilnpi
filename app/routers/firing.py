@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from database import get_firing_profiles, get_profile_by_id
+from ..services.profiles import get_firing_profiles, get_profile_by_id
 from ..models.firing_model import FiringProfile
 
 router = APIRouter()
