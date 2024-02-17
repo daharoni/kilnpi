@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
           pastFirings: [],
           currentTemperature: '',
           chart: null,
+          isFiring: false,
         };
       },
       methods: {
@@ -109,10 +110,33 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         },
         startFiring() {
-          // Placeholder for start firing functionality
+            // Ask for confirmation before starting
+            if (confirm('Are you sure you want to start the firing process?')) {
+                // The user clicked "OK"
+                // Disable the profile selector dropdown
+                this.isFiring = true;
+
+                // Add your logic to start the firing process, e.g., making a POST request to the backend
+                console.log('Firing process started');
+                // ... your existing code to start the firing ...
+            } else {
+                // The user clicked "Cancel"
+                console.log('Firing process not started');
+            }
         },
         abortFiring() {
-          // Placeholder for abort firing functionality
+            if (confirm('Are you sure you want to ABORT the firing process?')) {
+                // The user clicked "OK"
+                // Disable the profile selector dropdown
+                this.isFiring = false;
+
+                // Add your logic to start the firing process, e.g., making a POST request to the backend
+                console.log('Firing process aborted');
+                // ... your existing code to start the firing ...
+            } else {
+                // The user clicked "Cancel"
+                console.log('Firing process not aborted');
+            }
         },
         fetchPastFirings() {
           // Placeholder for fetching past firings
