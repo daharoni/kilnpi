@@ -29,7 +29,10 @@ jobs:
         pytest --cov=your_project tests/ --cov-report=term-missing --cov-report=xml
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v4.0.1
+      env:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: daharoni/kilnpi
       with:
         file: ./coverage.xml
         flags: unittests
