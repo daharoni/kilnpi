@@ -10,12 +10,46 @@ document.addEventListener('DOMContentLoaded', () => {
         };
       },
       methods: {
+         initEmptyChart() {
+            const ctx = document.getElementById('firingChart').getContext('2d');
+            if (this.chart) {
+                this.chart.destroy(); // Destroy the previous chart if it exists
+            }
+            this.chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [], // Empty labels array
+                    datasets: [{
+                        label: 'No Data',
+                        data: [], // Empty data array
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time (hour)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
+                        }
+                    }
+                }
+            });
+        },
         fetchProfiles() {
           fetch('/profiles/')
             .then(response => response.json())
             .then(data => {
               this.profiles = data;
-              console.log('Profiles fetched:', this.profiles); // Log to console
             })
             .catch(error => console.error('Error fetching profiles:', error));
         },
@@ -33,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
           this.chart = new Chart(ctx, {
             type: 'line',
             data: {
-              labels: profileData.temperature_profile.map(point => point.time.toString()),
+              labels: profileData.temperature_profile.map(point => (point.time / 60).toString()),
               datasets: [{
                 label: profileData.name,
                 data: profileData.temperature_profile.map(point => point.temperature),
@@ -47,14 +81,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 x: {
                   title: {
                     display: true,
-                    text: 'Time'
+                    text: 'Time (hour)'
+                  },
+                  min: 0,
+                  max: 12,
+                  // Configure to use integer steps for the hours
+                  type: 'linear',
+                  ticks: {
+                      stepSize: 1, // Set step size to 1 hour
+                      callback: function(value) {
+                          if (value % 1 === 0) { // Show only integer hours
+                              return value;
+                          }
+                      }
                   }
                 },
                 y: {
                   title: {
                     display: true,
-                    text: 'Temperature'
-                  }
+                    text: 'Temperature (°C)'
+                  },
+                  min: 0,
+                  max: 1300
                 }
               }
             }
@@ -79,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       mounted() {
         this.fetchProfiles();
+        this.initEmptyChart();
         // Additional mounted logic, e.g., fetching current temperature, can go here
       }
     }).mount('#app');
