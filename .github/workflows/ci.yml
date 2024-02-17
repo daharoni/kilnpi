@@ -31,5 +31,5 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4.0.1
       env:
-        token: 79209cf6-e0f4-415b-a2df-3fbafc8a70e3
+        token: ${{ secrets.CODECOV_TOKEN }}
         slug: daharoni/kilnpi
