@@ -1,33 +1,23 @@
 import sqlite3
+import json
+from typing import List, Dict, Any
 from sqlite3 import Connection
 
 DATABASE_URL = "data/sqlite.db"
 
-# Simulated database of firing profiles
-FIRING_PROFILES = [
-    {"id": 1, "name": "Low Fire", "max_temperature": 1000.0, "temperature_profile": [
-        {"time": 0, "temperature": 20.0},
-        {"time": 60, "temperature": 100.0},
-        {"time": 120, "temperature": 300.0},
-        {"time": 180, "temperature": 500.0},
-        {"time": 240, "temperature": 400.0},
-        {"time": 300, "temperature": 200.0},
-        {"time": 360, "temperature": 10.0},]},
-    {"id": 2, "name": "Mid Fire", "max_temperature": 1200.0, "temperature_profile": [
-        {"time": 0, "temperature": 20.0},
-        {"time": 60, "temperature": 200.0},
-        {"time": 120, "temperature": 500.0},
-        {"time": 180, "temperature": 1300.0},
-        {"time": 240, "temperature": 800.0},
-        {"time": 300, "temperature": 400.0},
-        {"time": 360, "temperature": 100.0},]},
-]
+def load_firing_profiles() -> List[Dict[str, Any]]:
+    with open('data/firing_profiles.json') as f:
+        return json.load(f)
 
-def get_firing_profiles():
-    return FIRING_PROFILES
+def get_firing_profiles() -> List[Dict[str, Any]]:
+    return load_firing_profiles()
 
-def get_profile_by_id(profile_id: int):
-    return next((profile for profile in FIRING_PROFILES if profile['id'] == profile_id), None)
+def get_profile_by_id(profile_id: int) -> Dict[str, Any]:
+    profiles = load_firing_profiles()
+    for profile in profiles:
+        if profile['id'] == profile_id:
+            return profile
+    return None
 
 
 def get_db_connection() -> Connection:

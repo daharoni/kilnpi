@@ -1,0 +1,23 @@
+[
+    {
+      "id": 1,
+      "name": "Low Fire",
+      "max_temperature": 1000,
+      "temperature_profile": [
+        {"time": 0, "temperature": 200},
+        {"time": 30, "temperature": 600},
+        {"time": 60, "temperature": 1000}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Mid Fire",
+      "max_temperature": 1200,
+      "temperature_profile": [
+        {"time": 0, "temperature": 200},
+        {"time": 40, "temperature": 800},
+        {"time": 80, "temperature": 1200}
+      ]
+    }
+  ]
+  
