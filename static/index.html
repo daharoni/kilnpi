@@ -5,16 +5,24 @@
     <title>Kiln Controller</title>
     <!-- Add Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js" defer></script> 
+    <!-- Include Vue.js -->
+    <script src="https://unpkg.com/vue@3"></script>
+    <!-- Reference the new Vue app script -->
+    <script src="vue_app.js" defer></script>
 </head>
 <body>
-    <h1>Kiln Controller</h1>
-    <select id="profileSelector" onchange="fetchProfiles()">
-        <!-- Options will be populated by script.js -->
-    </select>
-    <div id="dataDisplay">
-        <!-- Firing data will be displayed here -->
+    <div id="app">
+        <h1>Kiln Controller</h1>
+        <select v-model="selectedProfileId">
+            <option v-for="profile in profiles" :value="profile.id">{{ profile.name }}</option>
+        </select>
+        <button @click="startFiring">Start Firing</button>
+        <button @click="abortFiring">Abort Firing</button>
+        <div>Current Temperature: {{ currentTemperature }}</div>
+        <select>
+            <option v-for="firing in pastFirings" :value="firing.id">Firing on {{ firing.timestamp }}</option>
+        </select>
+        <canvas id="firingChart"></canvas> <!-- Canvas for plotting -->
     </div>
-    <canvas id="firingChart"></canvas> <!-- Canvas for plotting -->
 </body>
 </html>
