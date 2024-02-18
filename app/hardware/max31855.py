@@ -1,8 +1,8 @@
-from spi_devices import SPIDevice
+from .spi_devices import SPIDevice
 
 class MAX31855(SPIDevice):
-    def __init__(self, bus, device):
-        super().__init__(bus, device, max_speed_hz=5000000, mode=0b00)
+    def __init__(self, spi_device, bus, device):
+        super().__init__(spi_device, bus, device, max_speed_hz=5000000, mode=0b00)
 
     def read_raw_data(self):
         """Read the raw 32-bit data from the MAX31855 sensor."""

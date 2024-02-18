@@ -149,6 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.isFiring = true;
                 this.fetchFiringStartTime();
 
+                // clear plot
+                if (this.chart) {
+                  const dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Temperature');
+                  if (dataset) {
+                    dataset.data = [];
+                    this.chart.update();
+                  }  
+                }
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
                 console.log('Firing process started');
                 // ... your existing code to start the firing ...

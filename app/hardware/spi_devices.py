@@ -4,6 +4,7 @@ import sys
 if os.name == 'posix':
     try:
         import spidev
+        spi_device_class = spidev.SpiDev
     except ImportError:
         print("spidev module not found, ensure you're running on Raspberry Pi with spidev installed.")
         sys.exit(1)
@@ -14,14 +15,19 @@ else:
             pass
         def xfer2(self, data):
             # Return mock data appropriate for your application
-            return [0x00, 0x00, 0x00, 0x00]
+            return [0x05, 0x00, 0x00, 0x00]
         def close(self):
             pass
     spidev = MockSPI()
+    spi_device_class = MockSPI
 
 class SPIDevice:
-    def __init__(self, bus, device, max_speed_hz=5000000, mode=0b00):
-        self.spi = spidev.SpiDev()
+    def __init__(self, spi_device, bus, device, max_speed_hz=5000000, mode=0b00):
+        if callable(spi_device):
+            self.spi = spi_device()  # If spi_device is a class, instantiate it
+        else:
+            self.spi = spi_device  # Use the spi_device instance directly
+        # The rest of your initialization code
         self.bus = bus
         self.device = device
         self.spi.open(self.bus, self.device)
