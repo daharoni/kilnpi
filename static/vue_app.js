@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
           currentTemperature: '',
           // chart: null,
           isFiring: false,
+          firingStartTimestamp: '',
         };
       },
       methods: {
@@ -72,14 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
               datasets: [
                 {
                   label: profileData.name,
-                  data: profileData.temperature_profile.map(point => ({x: point.time / 60, y: point.temperature})),
+                  data: profileData.temperature_profile.map(point => ({x: point.time, y: point.temperature})),
                   fill: false,
                   borderColor: 'rgb(255, 99, 132)',
                   tension: 0.1
                 },
                 {
                   label: 'Kiln Temperature',
-                  data: profileData.temperature_profile.map(point => ({x: point.time / 60 * 2, y: point.temperature})),
+                  data: [],
                   fill: false,
                   borderColor: 'rgb(54, 162, 235)',
                   tension: 0.1
@@ -124,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // The user clicked "OK"
                 // Disable the profile selector dropdown
                 this.isFiring = true;
+                this.fetchFiringStartTime()
 
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
                 console.log('Firing process started');
@@ -150,6 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPastFirings() {
           // Placeholder for fetching past firings
         },
+        fetchFiringStartTime() {
+          fetch('/firingStartTimestamp/')
+              .then(response => response.json())
+              .then(data => {
+                  this.firingStartTimestamp = data.firingStartTime;  // Update the data property
+              })
+              .catch(error => console.error('Error fetching firing start time:', error));
+        },
         initWebSocket() {
           const ws = new WebSocket("ws://localhost:8000/ws/temperature"); // Adjust URL to your WebSocket endpoint
           ws.onopen = () => {
@@ -168,18 +178,27 @@ document.addEventListener('DOMContentLoaded', () => {
               this.currentTemperature = data.temperature
               // console.log(data.timestamp);
               // TODO: Only update when isFiring is true
-              this.updateChart(data.temperature, data.timestamp);
+              this.updateChart(data.temperature, data.timeSinceFiringStart);
           };
         },
+        calculateTimeDifference(dateTimeStr1, dateTimeStr2) {
 
+          const date1 = new Date(dateTimeStr1);
+          const date2 = new Date(dateTimeStr2);
+          const diffMilliseconds = date2 - date1;
+          const diffHours = diffMilliseconds / (1000 * 60 * 60);
+          return diffHours; // Or format it as needed
+        },
         updateChart(temperature, timestamp) {
             // Assuming your temperature data includes a timestamp in a format suitable for the chart's x-axis
-            if (this.chart) {
-              const dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Temperature');
-              if (dataset) {
-                dataset.data.push({x: 10, y: temperature})
-                this.chart.update();
-              }  
+            if (this.isFiring) {
+              if (this.chart) {
+                const dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Temperature');
+                if (dataset) {
+                  dataset.data.push({x: timestamp, y: temperature});
+                  this.chart.update();
+                }  
+              }
             }
         },
       },

@@ -5,8 +5,8 @@
       "max_temperature": 1000,
       "temperature_profile": [
         {"time": 0, "temperature": 200},
-        {"time": 30, "temperature": 600},
-        {"time": 60, "temperature": 1000}
+        {"time": 2, "temperature": 600},
+        {"time": 7, "temperature": 1000}
       ]
     },
     {
@@ -15,8 +15,8 @@
       "max_temperature": 1200,
       "temperature_profile": [
         {"time": 0, "temperature": 200},
-        {"time": 40, "temperature": 800},
-        {"time": 80, "temperature": 1200}
+        {"time": 1, "temperature": 800},
+        {"time": 9, "temperature": 1200}
       ]
     }
   ]

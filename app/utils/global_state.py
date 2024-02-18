@@ -6,3 +6,5 @@ from ..models.sensor_model import TemperatureData
 last_temperature = TemperatureData(temperature=0.0, flags=0, timestamp=datetime.now())
 # Lock to ensure thread-safe access to last_temperature
 temperature_lock = Lock()
+
+firingStartTime = datetime.now()

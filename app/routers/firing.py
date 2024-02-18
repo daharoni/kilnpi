@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 from ..services.profiles import get_firing_profiles, get_profile_by_id
 from ..models.firing_model import FiringProfile
+from app.utils.global_state import firingStartTime
 
 router = APIRouter()
 
@@ -15,4 +16,8 @@ def read_profile(profile_id: int):
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
     return profile
+
+@router.get("/firingStartTimestamp/")
+def get_firingStartTimestamp():
+    return {"firingStartTime": firingStartTime.isoformat()}
 
