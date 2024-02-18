@@ -19,6 +19,7 @@
         <button @click="startFiring" :disabled="isFiring">Start Firing</button>
         <button @click="abortFiring" :disabled="!isFiring">Abort Firing</button>
         <div>Current Temperature: {{ currentTemperature }} °C</div>
+        <input type="text" v-model="firingName" placeholder="Enter name or notes of firing"><!-- New text box -->
         <select>
             <option v-for="firing in pastFirings" :value="firing.id">Firing on {{ firing.timestamp }}</option>
         </select>

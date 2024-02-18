@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // chart: null,
           isFiring: false,
           firingStartTimestamp: '',
+          firingName: '',
         };
       },
       methods: {
@@ -125,13 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // The user clicked "OK"
                 // Disable the profile selector dropdown
                 // The user clicked "OK", send the signal to the backend
-              fetch('/start-firing/', {
+                fetch('/start-firing/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                // You can send additional data in the body if needed
-                // body: JSON.stringify({ key: 'value' })
+                body: JSON.stringify({firingName: this.firingName})
               })
               .then(response => {
                   if (!response.ok) {

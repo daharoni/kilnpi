@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Body
+import json
 from typing import List
 from ..services.profiles import get_firing_profiles, get_profile_by_id
 from ..models.firing_model import FiringProfile
 from app.utils.global_state import firingStartTime, isFiring
+from database import add_new_firing
 
 router = APIRouter()
 
@@ -22,8 +24,10 @@ def get_firingStartTimestamp():
     return {"firingStartTime": firingStartTime.isoformat()}
 
 @router.post("/start-firing/")
-def start_firing():
-    isFiring = True
+def start_firing(body: dict = Body(...)):
+    firing_name = body['firingName']
+    print(json.dumps(body, indent=2))
+    add_new_firing(firing_name) # addes a new db entry for tracking this firing
     # TODO: start db logging and PID and GPIO control of relays
     print("Firing process started.")
     return {"message": "Firing process started successfully."}

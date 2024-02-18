@@ -13,7 +13,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def init_db():
     Base.metadata.create_all(bind=engine)
-    add_new_firing()
 
 def get_db_session():
     db = SessionLocal()
@@ -23,10 +22,10 @@ def get_db_session():
         db.close()
 
 # Add new firing. This should happen when user clicks Start button
-def add_new_firing():
+def add_new_firing(name: str):
     db = SessionLocal()
     try:
-        new_firing = Firing(name='name1', start_time=datetime.datetime.now(), firing_profile='profile1')
+        new_firing = Firing(name=name, start_time=datetime.datetime.now(), firing_profile='profile1')
         db.add(new_firing)
         db.commit()
     finally:
