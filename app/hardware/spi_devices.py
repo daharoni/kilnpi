@@ -1,7 +1,7 @@
 import os
 import sys
 
-if os.name == 'posix':
+if (os.name == 'posix' and not os.getenv('CI')):
     try:
         import spidev
         spi_device_class = spidev.SpiDev
