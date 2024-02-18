@@ -9,7 +9,7 @@ from app.utils.global_state import last_temperature, temperature_lock, firingSta
 async def poll_temperature_sensor():
     new_temp = 100
     while True:
-        new_temp += 1
+        new_temp += 5
         flags = "some_flag"
         timestamp = datetime.now()
         timeSinceFiringStart = timestamp - firingStartTime

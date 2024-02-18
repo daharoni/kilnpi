@@ -8,3 +8,5 @@ last_temperature = TemperatureData(temperature=0.0, flags=0, timestamp=datetime.
 temperature_lock = Lock()
 
 firingStartTime = datetime.now()
+isFiring = False
+

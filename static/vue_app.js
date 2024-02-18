@@ -124,8 +124,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm('Are you sure you want to start the firing process?')) {
                 // The user clicked "OK"
                 // Disable the profile selector dropdown
+                // The user clicked "OK", send the signal to the backend
+              fetch('/start-firing/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                // You can send additional data in the body if needed
+                // body: JSON.stringify({ key: 'value' })
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Failed to start the firing process');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  console.log(data.message);  // Log the success message
+                  // Update any relevant component state here
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
                 this.isFiring = true;
-                this.fetchFiringStartTime()
+                this.fetchFiringStartTime();
 
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
                 console.log('Firing process started');
@@ -139,6 +161,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm('Are you sure you want to ABORT the firing process?')) {
                 // The user clicked "OK"
                 // Disable the profile selector dropdown
+                fetch('/abort-firing/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  // You can send additional data in the body if needed
+                  // body: JSON.stringify({ key: 'value' })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to start the firing process');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data.message);  // Log the success message
+                    // Update any relevant component state here
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
                 this.isFiring = false;
 
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
