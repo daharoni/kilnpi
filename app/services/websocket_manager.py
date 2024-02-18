@@ -6,10 +6,10 @@ connections: List[WebSocket] = []
 
 async def broadcast(message: str):
     disconnected_clients = []
-    print(connections)
+    # print(connections)
     for connection in connections:
         try:
-            print(connection)
+            # print(connection)
             await connection.send_text(message)
         except RuntimeError as e:
             # Handle disconnected client

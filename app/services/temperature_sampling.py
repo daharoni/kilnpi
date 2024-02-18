@@ -15,5 +15,5 @@ async def poll_temperature_sensor():
         async with temperature_lock:
             last_temperature = {"temperature": new_temp, "flags": flags, "timestamp": timestamp}
             await broadcast(json.dumps(last_temperature))
-            print(new_temp)
-        await asyncio.sleep(10)
+            # print(new_temp)
+        await asyncio.sleep(3)

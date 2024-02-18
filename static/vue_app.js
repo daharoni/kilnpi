@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const app = Vue.createApp({
       data() {
+        this.chart = null
         return {
           profiles: [],
           selectedProfileId: null,
           pastFirings: [],
           currentTemperature: '',
-          chart: null,
+          // chart: null,
           isFiring: false,
         };
       },
@@ -68,14 +69,22 @@ document.addEventListener('DOMContentLoaded', () => {
           this.chart = new Chart(ctx, {
             type: 'line',
             data: {
-              labels: profileData.temperature_profile.map(point => (point.time / 60).toString()),
-              datasets: [{
-                label: profileData.name,
-                data: profileData.temperature_profile.map(point => point.temperature),
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-              }]
+              datasets: [
+                {
+                  label: profileData.name,
+                  data: profileData.temperature_profile.map(point => ({x: point.time / 60, y: point.temperature})),
+                  fill: false,
+                  borderColor: 'rgb(255, 99, 132)',
+                  tension: 0.1
+                },
+                {
+                  label: 'Kiln Temperature',
+                  data: profileData.temperature_profile.map(point => ({x: point.time / 60 * 2, y: point.temperature})),
+                  fill: false,
+                  borderColor: 'rgb(54, 162, 235)',
+                  tension: 0.1
+                }
+              ]
             },
             options: {
               scales: {
@@ -145,31 +154,32 @@ document.addEventListener('DOMContentLoaded', () => {
           const ws = new WebSocket("ws://localhost:8000/ws/temperature"); // Adjust URL to your WebSocket endpoint
           ws.onopen = () => {
             console.log("WebSocket connection established");
-        };
+          };
         
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-        
-        ws.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
+          ws.onerror = (error) => {
+              console.error("WebSocket error:", error);
+          };
+          
+          ws.onclose = () => {
+              console.log("WebSocket connection closed");
+          };
           ws.onmessage = (event) => {
               const data = JSON.parse(event.data);
-              console.log(data.timestamp);
+              this.currentTemperature = data.temperature
+              // console.log(data.timestamp);
+              // TODO: Only update when isFiring is true
               this.updateChart(data.temperature, data.timestamp);
           };
-      },
+        },
 
         updateChart(temperature, timestamp) {
             // Assuming your temperature data includes a timestamp in a format suitable for the chart's x-axis
             if (this.chart) {
-                const label = new Date(timestamp).toLocaleTimeString();
-                this.chart.data.labels.push(label); // Add timestamp to labels
-                this.chart.data.datasets.forEach((dataset) => {
-                    dataset.data.push(temperature); // Add temperature to dataset
-                });
+              const dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Temperature');
+              if (dataset) {
+                dataset.data.push({x: 10, y: temperature})
                 this.chart.update();
+              }  
             }
         },
       },

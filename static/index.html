@@ -18,7 +18,7 @@
         </select>
         <button @click="startFiring" :disabled="isFiring">Start Firing</button>
         <button @click="abortFiring" :disabled="!isFiring">Abort Firing</button>
-        <div>Current Temperature: {{ currentTemperature }}</div>
+        <div>Current Temperature: {{ currentTemperature }} °C</div>
         <select>
             <option v-for="firing in pastFirings" :value="firing.id">Firing on {{ firing.timestamp }}</option>
         </select>
