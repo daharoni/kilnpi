@@ -15,7 +15,7 @@ else:
             pass
         def xfer2(self, data):
             # Return mock data appropriate for your application
-            return [0x05, 0x00, 0x00, 0x00]
+            return [0x01, 0x00, 0x00, 0x00]
         def close(self):
             pass
     spidev = MockSPI()

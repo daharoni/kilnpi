@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   data: profileData.temperature_profile.map(point => ({x: point.time, y: point.temperature})),
                   fill: false,
                   borderColor: 'rgb(255, 99, 132)',
+                  borderWidth: 2,
                   tension: 0.1
                 },
                 {
@@ -86,11 +87,29 @@ document.addEventListener('DOMContentLoaded', () => {
                   data: [],
                   fill: false,
                   borderColor: 'rgb(54, 162, 235)',
+                  borderWidth: 4,
                   tension: 0.1
                 }
               ]
             },
             options: {
+              plugins: {
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true, // Enable zooming with the mouse wheel
+                        },
+                        pinch: {
+                            enabled: true // Enable zooming with pinch gestures on touch devices
+                        },
+                        mode: 'xy', // Zoom both the x and y axes
+                    },
+                    pan: {
+                        enabled: true, // Enable panning
+                        mode: 'xy' // Pan in both the x and y axes
+                    }
+                }
+              },
               scales: {
                 x: {
                   title: {

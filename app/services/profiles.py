@@ -47,9 +47,13 @@ async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
 
     baseTemp = await read_temperature()
     print(baseTemp.temperature)
-    start_point = TemperatureProfilePoint(time=0.0, temperature= baseTemp.temperature)
+    start_point = TemperatureProfilePoint(time= 0.0, temperature= baseTemp.temperature)
+    low_ramp_point = TemperatureProfilePoint(time= 0.33, temperature= baseTemp.temperature + 4.0)
     for profile in firing_profiles:
         if profile['id'] == profile_id:
             profile['temperature_profile'].insert(0, start_point)
+            profile['temperature_profile'].insert(1, low_ramp_point)
+            if isDry:
+                pass
             return profile
     return None
