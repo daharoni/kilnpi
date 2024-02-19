@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       methods: {
          initEmptyChart() {
-            const ctx = document.getElementById('firingChart').getContext('2d');
+            const ctx = this.$refs.firingChart.getContext('2d');
             if (this.chart) {
                 this.chart.destroy(); // Destroy the previous chart if it exists
             }
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error fetching profile data:', error));
         },
         plotProfile(profileData) {
-          const ctx = document.getElementById('firingChart').getContext('2d');
+          const ctx = this.$refs.firingChart.getContext('2d');
           if (this.chart) {
             this.chart.destroy(); // Destroy the previous chart if it exists
           }
@@ -314,6 +314,11 @@ document.addEventListener('DOMContentLoaded', () => {
         this.fetchProfiles();
         this.initEmptyChart();
         this.initWebSocket();
+        this.$refs.firingChart.addEventListener('dblclick', () => {
+          if (this.chart) { // Assuming this.chart is your Chart.js instance
+            this.chart.resetZoom();
+          }
+        });
         // Additional mounted logic, e.g., fetching current temperature, can go here
       }
     }).mount('#app');
