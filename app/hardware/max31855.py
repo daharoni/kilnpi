@@ -28,7 +28,18 @@ class MAX31855(SPIDevice):
         return temperature, None
 
     def read_faults(self, raw_value=None):
-        """Read and interpret fault bits from the MAX31855 sensor."""
+        """
+        Read and interpret fault bits from the MAX31855 sensor.
+
+        Parameters:
+        - raw_value (int, optional): The raw 32-bit data from the MAX31855 sensor. If not provided, it will be read from the sensor.
+
+        Returns:
+        - faults (dict): A dictionary containing the interpreted fault bits from the sensor. The keys are:
+            - "open_circuit" (bool): True if there is an open circuit fault, False otherwise.
+            - "short_to_gnd" (bool): True if there is a short to ground fault, False otherwise.
+            - "short_to_vcc" (bool): True if there is a short to VCC fault, False otherwise.
+        """
         if raw_value is None:
             raw_value = self.read_raw_data()
         

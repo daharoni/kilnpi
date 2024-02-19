@@ -8,6 +8,7 @@ from app.services.websocket_manager import broadcast
 from app.utils.global_state import write_temperature, firingStartTime
 from app.hardware.max31855 import MAX31855
 from app.hardware.spi_devices import spi_device_class
+from app.models.sensor_model import TemperatureData
 
 
 # Initialize MAX31855 sensor (adjust bus and device numbers as necessary)
@@ -21,15 +22,14 @@ async def poll_temperature_sensor() -> None:
 
     while True:
         max_ic_temp, faults = max31855_sensor.read_temperature()
-        faults = "some_flag"
         timestamp = datetime.now()
         time_since_firing_start = timestamp - firingStartTime
-        last_temperature = {
-            "temperature": max_ic_temp,
-            "faults": faults,
-            "timestamp": timestamp.isoformat(),
-            "timeSinceFiringStart": time_since_firing_start.total_seconds() / (60 * 60)
-        }
+        last_temperature = TemperatureData(
+            temperature = max_ic_temp,
+            faults = faults,
+            timestamp= timestamp.isoformat(),
+            timeSinceFiringStart= time_since_firing_start.total_seconds() / (60 * 60)
+        )
         await write_temperature(last_temperature)
-        await broadcast(json.dumps(last_temperature))
+        await broadcast(last_temperature.model_dump_json())
         await asyncio.sleep(3)

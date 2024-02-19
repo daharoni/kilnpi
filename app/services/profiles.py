@@ -46,8 +46,8 @@ async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
         load_firing_profiles()
 
     baseTemp = await read_temperature()
-    print(baseTemp['temperature'])
-    start_point = TemperatureProfilePoint(time=0.0, temperature= baseTemp['temperature'])
+    print(baseTemp.temperature)
+    start_point = TemperatureProfilePoint(time=0.0, temperature= baseTemp.temperature)
     for profile in firing_profiles:
         if profile['id'] == profile_id:
             profile['temperature_profile'].insert(0, start_point)
