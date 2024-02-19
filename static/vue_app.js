@@ -122,10 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   type: 'linear',
                   ticks: {
                       stepSize: 1, // Set step size to 1 hour
-                      callback: function(value) {
-                          if (value % 1 === 0) { // Show only integer hours
-                              return value;
-                          }
+                      callback: function(value, index, values) {
+                        return Math.round(value);
                       }
                   }
                 },
