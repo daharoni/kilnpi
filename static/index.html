@@ -9,21 +9,82 @@
     <script src="https://unpkg.com/vue@3"></script>
     <!-- Reference the new Vue app script -->
     <script src="vue_app.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #app {
+            width: 80%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        select, button, input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        canvas {
+            width: 100%;
+            height: 400px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .checkbox-container {
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+        }
+        .checkbox-container div {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* This will add a little space between the elements */
+        }
+    </style>
 </head>
 <body>
     <div id="app">
         <h1>Kiln Controller</h1>
-        <select id="profileSelector" v-model="selectedProfileId" :disabled="isFiring">
-            <option v-for="profile in profiles" :value="profile.id">{{ profile.name }}</option> 
-        </select>
-        <button @click="startFiring" :disabled="isFiring">Start Firing</button>
-        <button @click="abortFiring" :disabled="!isFiring">Abort Firing</button>
+        <div class="controls">
+            <select id="profileSelector" v-model="selectedProfileId" :disabled="isFiring">
+                <option v-for="profile in profiles" :value="profile.id">{{ profile.name }}</option> 
+            </select>
+            <button @click="startFiring" :disabled="isFiring">Start Firing</button>
+            <button @click="abortFiring" :disabled="!isFiring">Abort Firing</button>
+        </div>
         <div>Current Temperature: {{ currentTemperature }} °C</div>
-        <input type="text" v-model="firingName" placeholder="Enter name or notes of firing"><!-- New text box -->
-        <select>
-            <option v-for="firing in pastFirings" :value="firing.id">Firing on {{ firing.timestamp }}</option>
-        </select>
-        <canvas id="firingChart"></canvas> <!-- Canvas for plotting -->
+        <input type="text" v-model="firingName" placeholder="Enter name or notes of firing">
+        <div class="checkbox-container">
+            <div>
+                <input type="checkbox" id="dry" v-model="isDry">
+                <label for="dry">Dry</label>
+            </div>
+            <div>
+                <input type="checkbox" id="soak" v-model="isSoak">
+                <label for="soak">Soak</label>
+            </div>
+        </div>
+        <canvas id="firingChart"></canvas>
     </div>
 </body>
 </html>

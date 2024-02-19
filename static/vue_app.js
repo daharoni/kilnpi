@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
           isFiring: false,
           firingStartTimestamp: '',
           firingName: '',
+          isSoak: false,
+          isDry: false,
         };
       },
       methods: {
