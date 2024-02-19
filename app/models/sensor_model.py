@@ -5,3 +5,4 @@ class TemperatureData(BaseModel):
     temperature: float
     flags: int
     timestamp: datetime
+    timeSinceFiringStart: float

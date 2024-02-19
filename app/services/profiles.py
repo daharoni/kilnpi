@@ -1,6 +1,7 @@
 import json
 from typing import List, Dict, Any
 from app.utils.global_state import read_temperature
+from app.models.firing_model import TemperatureProfilePoint
 
 firing_profiles = []
 
@@ -45,7 +46,10 @@ async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
         load_firing_profiles()
 
     baseTemp = await read_temperature()
+    print(baseTemp['temperature'])
+    start_point = TemperatureProfilePoint(time=0.0, temperature= baseTemp['temperature'])
     for profile in firing_profiles:
         if profile['id'] == profile_id:
+            profile['temperature_profile'].insert(0, start_point)
             return profile
     return None

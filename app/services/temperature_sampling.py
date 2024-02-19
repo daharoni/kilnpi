@@ -18,15 +18,14 @@ async def poll_temperature_sensor() -> None:
     An asynchronous function that continuously reads the temperature from a MAX31855 sensor
     and broadcasts the temperature data to connected clients.
     """
-    new_temp = 100
+
     while True:
         max_ic_temp, faults = max31855_sensor.read_temperature()
-        print(f"Current Temperature: {max_ic_temp}°C")
         faults = "some_flag"
         timestamp = datetime.now()
         time_since_firing_start = timestamp - firingStartTime
         last_temperature = {
-            "temperature": new_temp,
+            "temperature": max_ic_temp,
             "faults": faults,
             "timestamp": timestamp.isoformat(),
             "timeSinceFiringStart": time_since_firing_start.total_seconds() / (60 * 60)
