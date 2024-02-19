@@ -1,10 +1,9 @@
 import json
 from typing import List, Dict, Any
-from app.utils.global_state import read_temperature
+from app.utils.global_state import get_temperature
 from app.models.firing_model import TemperatureProfilePoint
 
 firing_profiles = []
-
 def load_firing_profiles() -> List[Dict[str, Any]]:
     """
     Load firing profiles from a JSON file and return them as a list of dictionaries.
@@ -45,14 +44,14 @@ async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
     if not firing_profiles:
         load_firing_profiles()
 
-    baseTemp = await read_temperature()
-    print(baseTemp.temperature)
+    baseTemp = get_temperature()
     start_point = TemperatureProfilePoint(time= 0.0, temperature= baseTemp.temperature)
     low_ramp_point = TemperatureProfilePoint(time= 0.33, temperature= baseTemp.temperature + 4.0)
     for profile in firing_profiles:
         if profile['id'] == profile_id:
+            
+            profile['temperature_profile'].insert(0, low_ramp_point)
             profile['temperature_profile'].insert(0, start_point)
-            profile['temperature_profile'].insert(1, low_ramp_point)
             if isDry:
                 pass
             return profile

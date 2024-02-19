@@ -95,19 +95,23 @@ document.addEventListener('DOMContentLoaded', () => {
             options: {
               plugins: {
                 zoom: {
-                    zoom: {
-                        wheel: {
-                            enabled: true, // Enable zooming with the mouse wheel
-                        },
-                        pinch: {
-                            enabled: true // Enable zooming with pinch gestures on touch devices
-                        },
-                        mode: 'xy', // Zoom both the x and y axes
-                    },
-                    pan: {
-                        enabled: true, // Enable panning
-                        mode: 'xy' // Pan in both the x and y axes
-                    }
+                  limits: {
+                    x: {min: 0, max: 24},
+                    y: {min: 0, max: 1300}
+                  },
+                  zoom: {
+                      wheel: {
+                          enabled: true, // Enable zooming with the mouse wheel
+                      },
+                      pinch: {
+                          enabled: true // Enable zooming with pinch gestures on touch devices
+                      },
+                      mode: 'xy', // Zoom both the x and y axes
+                  },
+                  pan: {
+                      enabled: true, // Enable panning
+                      mode: 'xy' // Pan in both the x and y axes
+                  }
                 }
               },
               scales: {

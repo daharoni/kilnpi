@@ -3,7 +3,7 @@ import json
 from typing import List
 from ..services.profiles import get_firing_profiles, get_profile_by_id, updateProfile
 from ..models.firing_model import FiringProfile
-from app.utils.global_state import firingStartTime, isFiring
+from app.utils.global_state import firingStartTime, set_isFiring
 from database import add_new_firing
 
 router = APIRouter()
@@ -32,6 +32,7 @@ def start_firing(body: dict = Body(...)):
     firing_name = body['firingName']
     add_new_firing(firing_name) # addes a new db entry for tracking this firing
     # TODO: start db logging and PID and GPIO control of relays
+    set_isFiring(True)
     print("Firing process started.")
     return {"message": "Firing process started successfully."}
 

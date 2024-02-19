@@ -3,6 +3,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import datetime
 from app.models.database_model import Firing, Base
+from app.utils.global_state import temperature_broadcaster, get_isFiring
+from app.models.sensor_model import TemperatureData
+
 
 DATABASE_URL = "sqlite:///./data/sqlite.db"
 
@@ -30,6 +33,16 @@ def add_new_firing(name: str):
         db.commit()
     finally:
         db.close()
+        
+async def add_new_temperature_entry(temp_data: TemperatureData):
+
+    if get_isFiring():
+        db = SessionLocal()
+        try:
+            print(temp_data)
+        finally:
+            db.close()
     
 # Initialize the database and create tables
 init_db()
+temperature_broadcaster.add_listener(add_new_temperature_entry)
