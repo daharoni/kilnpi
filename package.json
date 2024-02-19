@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "chart.js": "^4.4.1",
-    "chartjs-plugin-zoom": "^2.0.1"
+    "chartjs-plugin-zoom": "^2.0.1",
+    "hammerjs": "^2.0.8"
   },
   "name": "kilnpi",
   "description": "A web-based raspberry pi controller for ceramic kilns",
@@ -11,8 +12,12 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy-assets": "shx cp node_modules/hammerjs/hammer.min.js static/js/"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "shx": "^0.3.4"
+  }
 }
