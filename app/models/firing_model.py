@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List
 
 class TemperatureProfilePoint(BaseModel):
-    time: int  # Assuming time is measured in minutes or a similar discrete unit
+    time: float  # Assuming time is measured in minutes or a similar discrete unit
     temperature: float  # Temperature at the given time
 
 class FiringProfile(BaseModel):

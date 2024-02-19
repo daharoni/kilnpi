@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error fetching profiles:', error));
         },
-        fetchAndPlotProfile(profileId) {
+        updateProfilePlot(profileId) {
           fetch(`/profiles/${profileId}/`)
             .then(response => response.json())
             .then(data => this.plotProfile(data))
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Time (hour)'
                   },
                   min: 0,
-                  max: 12,
+                  max: 16,
                   // Configure to use integer steps for the hours
                   type: 'linear',
                   ticks: {
@@ -202,9 +202,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Firing process not aborted');
             }
         },
-        fetchPastFirings() {
-          // Placeholder for fetching past firings
-        },
+          postDryChange(isDry) {
+            fetch('/dry-change/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ isDry: isDry })
+            })
+            .then(response => response.json())
+            .then(data => this.plotProfile(data))
+            .catch(error => console.error('Error:', error));
+          },
+          postSoakChange(isSoak) {
+            fetch('/soak-change/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ isSoak: isSoak })
+            })
+            .then(response => response.json())
+            .then(data => this.plotProfile(data))
+            .catch(error => console.error('Error:', error));
+          },
         fetchFiringStartTime() {
           fetch('/firingStartTimestamp/')
               .then(response => response.json())
@@ -258,7 +279,17 @@ document.addEventListener('DOMContentLoaded', () => {
       watch: {
         selectedProfileId(newVal, oldVal) {
           if (newVal !== oldVal && newVal !== null) {
-            this.fetchAndPlotProfile(newVal);
+            this.updateProfilePlot(newVal);
+          }
+        },
+        isDry(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            this.postDryChange(newVal);
+          }
+        },
+        isSoak(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            this.postSoakChange(newVal);
           }
         },
       },

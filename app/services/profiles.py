@@ -1,5 +1,8 @@
 import json
 from typing import List, Dict, Any
+from app.utils.global_state import read_temperature
+
+firing_profiles = []
 
 def load_firing_profiles() -> List[Dict[str, Any]]:
     """
@@ -9,12 +12,14 @@ def load_firing_profiles() -> List[Dict[str, Any]]:
         List[Dict[str, Any]]: A list of dictionaries representing firing profiles.
     """
     with open('data/firing_profiles.json') as f:
-        firing_profiles = json.load(f)
-    return firing_profiles
+        return json.load(f)
 
 
 def get_firing_profiles() -> List[Dict[str, Any]]:
-    return load_firing_profiles()
+    global firing_profiles
+    if not firing_profiles:
+        firing_profiles = load_firing_profiles()
+    return firing_profiles
 
 def get_profile_by_id(profile_id: int) -> Dict[str, Any]:
     """
@@ -26,8 +31,21 @@ def get_profile_by_id(profile_id: int) -> Dict[str, Any]:
     Returns:
         dict: A dictionary representing the firing profile with the given profile_id. If no matching profile is found, None is returned.
     """
-    profiles = load_firing_profiles()
-    for profile in profiles:
+    global firing_profiles
+    if not firing_profiles:
+        firing_profiles = load_firing_profiles()
+    for profile in firing_profiles:
+        if profile['id'] == profile_id:
+            return profile
+    return None
+
+async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
+    global firing_profiles
+    if not firing_profiles:
+        load_firing_profiles()
+
+    baseTemp = await read_temperature()
+    for profile in firing_profiles:
         if profile['id'] == profile_id:
             return profile
     return None

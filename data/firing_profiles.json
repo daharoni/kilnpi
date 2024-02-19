@@ -1,22 +1,50 @@
 [
     {
       "id": 1,
-      "name": "Low Fire",
-      "max_temperature": 1000,
+      "name": "Cone 04 - Slow",
+      "max_temperature": 1063,
       "temperature_profile": [
-        {"time": 0, "temperature": 200},
-        {"time": 2, "temperature": 600},
-        {"time": 7, "temperature": 1000}
+        {"time": 2.25, "temperature": 120},
+        {"time": 6.00, "temperature": 540},
+        {"time": 7.00, "temperature": 600},
+        {"time": 10.31, "temperature": 923},
+        {"time": 13.44, "temperature": 1063}
       ]
     },
     {
       "id": 2,
-      "name": "Mid Fire",
-      "max_temperature": 1200,
+      "name": "Cone 04 - MedSlo",
+      "max_temperature": 1063,
       "temperature_profile": [
-        {"time": 0, "temperature": 200},
-        {"time": 1, "temperature": 800},
-        {"time": 9, "temperature": 1200}
+        {"time": 1.50, "temperature": 120},
+        {"time": 4.00, "temperature": 540},
+        {"time": 4.67, "temperature": 600},
+        {"time": 7.31, "temperature": 923},
+        {"time": 9.62, "temperature": 1063}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Cone 6 - Slow",
+      "max_temperature": 1222,
+      "temperature_profile": [
+        {"time": 2.25, "temperature": 120},
+        {"time": 6.00, "temperature": 540},
+        {"time": 7.00, "temperature": 600},
+        {"time": 11.90, "temperature": 1083},
+        {"time": 15.03, "temperature": 1222}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Cone 6 - MedSlo",
+      "max_temperature": 1222,
+      "temperature_profile": [
+        {"time": 1.50, "temperature": 120},
+        {"time": 4.00, "temperature": 540},
+        {"time": 4.67, "temperature": 600},
+        {"time": 8.59, "temperature": 1083},
+        {"time": 10.90, "temperature": 1222}
       ]
     }
   ]

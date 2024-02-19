@@ -5,7 +5,7 @@ from fastapi import WebSocket
 import json
 from datetime import datetime
 from app.services.websocket_manager import broadcast
-from app.utils.global_state import last_temperature, temperature_lock, firingStartTime
+from app.utils.global_state import write_temperature, firingStartTime
 from app.hardware.max31855 import MAX31855
 from app.hardware.spi_devices import spi_device_class
 
@@ -25,12 +25,12 @@ async def poll_temperature_sensor() -> None:
         faults = "some_flag"
         timestamp = datetime.now()
         time_since_firing_start = timestamp - firingStartTime
-        async with temperature_lock:
-            last_temperature = {
-                "temperature": new_temp,
-                "faults": faults,
-                "timestamp": timestamp.isoformat(),
-                "timeSinceFiringStart": time_since_firing_start.total_seconds() / (60 * 60)
-            }
-            await broadcast(json.dumps(last_temperature))
+        last_temperature = {
+            "temperature": new_temp,
+            "faults": faults,
+            "timestamp": timestamp.isoformat(),
+            "timeSinceFiringStart": time_since_firing_start.total_seconds() / (60 * 60)
+        }
+        await write_temperature(last_temperature)
+        await broadcast(json.dumps(last_temperature))
         await asyncio.sleep(3)
