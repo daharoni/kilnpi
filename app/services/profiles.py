@@ -105,5 +105,6 @@ async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
                     count = count + 1
                     time1 = temp['time']
                     temp1 = temp['temperature']
+            print(modified_profile)
             return modified_profile
     return None

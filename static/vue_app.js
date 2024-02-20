@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                   label: 'Kiln Temperature',
-                  data: this.kilnTemperatureData,
+                  data: this.kilnTemperatureData.map(point => ({x: point.time, y: point.temperature})),
                   fill: false,
                   borderColor: 'rgb(54, 162, 235)',
                   borderWidth: 4,
@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   console.error('Error:', error);
               });
                 this.isFiring = true;
+                this.postStateUpdate();
                 this.fetchFiringStartTime();
 
                 // clear plot
@@ -187,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Error:', error);
                 });
                 this.isFiring = false;
+                this.postStateUpdate();
 
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
                 console.log('Firing process aborted');
@@ -264,7 +266,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Temperature');
                 if (dataset) {
                   dataset.data.push({x: timestamp, y: temperature});
-                  this.kilnTemperatureData.push({x: timestamp, y: temperature});
+                  this.kilnTemperatureData.push({time: timestamp, temperature: temperature});
+                  this.postStateUpdate();
                   this.chart.update();
                 }  
               }
@@ -296,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       isSoak: this.isSoak,
                       isDry: this.isDry,
                       profileID: this.selectedProfileId,
-                      kilnTemperaturePlot: this.kilnTemperaturePlot,
+                      kilnTemperatureData: this.kilnTemperatureData,
                       // Add other state properties
                   }),
               });
