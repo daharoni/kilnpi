@@ -1,1 +1,1 @@
-from .global_state import temperature_broadcaster, get_temperature, get_isFiring, set_isFiring
+from .global_state import temperature_broadcaster, get_temperature, get_isFiring, set_isFiring, broadcast_new_temp

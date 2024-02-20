@@ -5,7 +5,7 @@ from fastapi import WebSocket
 import json
 from datetime import datetime
 from app.services.websocket_manager import broadcast
-from app.utils.global_state import firingStartTime, temperature_broadcaster
+from app.utils.global_state import firingStartTime, broadcast_new_temp
 from app.hardware.max31855 import MAX31855
 from app.hardware.spi_devices import spi_device_class
 from app.models.sensor_model import TemperatureData
@@ -30,6 +30,6 @@ async def poll_temperature_sensor() -> None:
             timestamp= timestamp.isoformat(),
             timeSinceFiringStart= time_since_firing_start.total_seconds() / (60 * 60)
         )
-        await temperature_broadcaster.broadcast(last_temperature)
+        await broadcast_new_temp(last_temperature)
         await broadcast(last_temperature.model_dump_json())
         await asyncio.sleep(3)

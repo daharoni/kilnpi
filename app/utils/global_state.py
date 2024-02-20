@@ -38,5 +38,4 @@ async def broadcast_new_temp(tempData: TemperatureData):
     
 def get_temperature():
     global last_temperature
-    
     return last_temperature

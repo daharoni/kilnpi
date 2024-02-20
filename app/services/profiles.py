@@ -41,10 +41,12 @@ def get_profile_by_id(profile_id: int) -> Dict[str, Any]:
 
 async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
     global firing_profiles
+    
     if not firing_profiles:
         load_firing_profiles()
 
     baseTemp = get_temperature()
+    print(baseTemp)
     start_point = TemperatureProfilePoint(time= 0.0, temperature= baseTemp.temperature)
     low_ramp_point = TemperatureProfilePoint(time= 0.33, temperature= baseTemp.temperature + 4.0)
     for profile in firing_profiles:
