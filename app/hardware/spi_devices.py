@@ -11,11 +11,17 @@ if (os.name == 'posix' and not os.getenv('CI')):
 else:
     # Mock spidev for non-POSIX systems (like Windows)
     class MockSPI:
+        def __init__(self,spi_response=[0x01, 0x00, 0x00, 0x00]):
+            self.spi_response = spi_response
+            
         def open(self, bus, device):
             pass
         def xfer2(self, data):
             # Return mock data appropriate for your application
-            return [0x01, 0x00, 0x00, 0x00]
+            self.spi_response[0] += 1
+            if (self.spi_response[0] > 100):
+                self.spi_response[0] = 1
+            return self.spi_response
         def close(self):
             pass
     spidev = MockSPI()

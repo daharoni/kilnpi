@@ -57,10 +57,10 @@ async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
                 # add in a 15 minute dry period at 100 C
                 dry_temp = 100
                 dry_length = 0.25
-                count = 0
+                count = 2
                 time1 = 0
                 temp1 = 0
-                for temp in modified_profile['temperature_profile']:
+                for temp in modified_profile['temperature_profile'][2:]:
                     if (temp['temperature'] > dry_temp):
                         # Find where curve would have hit 100
                         # y = mx+b
@@ -76,6 +76,7 @@ async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
                         for i in range(count+2, len(modified_profile['temperature_profile'])):
                             modified_profile['temperature_profile'][i]['time'] = modified_profile['temperature_profile'][i]['time'] + dry_length
                         break
+                    
                     count = count + 1
                     time1 = temp['time']
                     temp1 = temp['temperature']

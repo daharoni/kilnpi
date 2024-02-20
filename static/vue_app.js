@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error fetching profiles:', error));
         },
         updateProfilePlot(profileId) {
-          if (profileId) {
+          if (profileId !== null) {
             fetch(`/profiles/${profileId}/`)
               .then(response => response.json())
               .then(data => this.plotProfile(data))
