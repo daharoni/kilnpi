@@ -9,8 +9,6 @@ current_state = AppState()
 @router.get("/state/")
 async def get_state():
     global current_state
-    print('SADSDASDSASDASA')
-    print(current_state)
     return current_state
 
 @router.post("/update_state/")

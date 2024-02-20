@@ -13,44 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
           firingName: '',
           isSoak: false,
           isDry: false,
+          kilnTemperatureData: [],
         };
       },
       methods: {
-         initEmptyChart() {
-            const ctx = this.$refs.firingChart.getContext('2d');
-            if (this.chart) {
-                this.chart.destroy(); // Destroy the previous chart if it exists
-            }
-            this.chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [], // Empty labels array
-                    datasets: [{
-                        label: 'No Data',
-                        data: [], // Empty data array
-                        fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Time (hour)'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Temperature (°C)'
-                            }
-                        }
-                    }
-                }
-            });
-        },
+
         fetchProfiles() {
           fetch('/profiles/')
             .then(response => response.json())
@@ -60,10 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error fetching profiles:', error));
         },
         updateProfilePlot(profileId) {
-          fetch(`/profiles/${profileId}/`)
-            .then(response => response.json())
-            .then(data => this.plotProfile(data))
-            .catch(error => console.error('Error fetching profile data:', error));
+          if (profileId) {
+            fetch(`/profiles/${profileId}/`)
+              .then(response => response.json())
+              .then(data => this.plotProfile(data))
+              .catch(error => console.error('Error fetching profile data:', error));
+          }
+          else {
+            const emptyProfile = {name:'', temperature_profile: []};
+            this.plotProfile(emptyProfile);
+          }
         },
         plotProfile(profileData) {
           const ctx = this.$refs.firingChart.getContext('2d');
@@ -84,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                   label: 'Kiln Temperature',
-                  data: [],
+                  data: this.kilnTemperatureData,
                   fill: false,
                   borderColor: 'rgb(54, 162, 235)',
                   borderWidth: 4,
@@ -291,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Temperature');
                 if (dataset) {
                   dataset.data.push({x: timestamp, y: temperature});
+                  this.kilnTemperatureData.push({x: timestamp, y: temperature});
                   this.chart.update();
                 }  
               }
@@ -305,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.isSoak = data.isSoak;
             this.isDry = data.isDry;
             this.selectedProfileId = data.profileID;
+            this.kilnTemperatureData = data.kilnTemperatureData;
           })
           .catch(error => console.error('Error fetching initial state:', error));
         },
@@ -321,6 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       isSoak: this.isSoak,
                       isDry: this.isDry,
                       profileID: this.selectedProfileId,
+                      kilnTemperaturePlot: this.kilnTemperaturePlot,
                       // Add other state properties
                   }),
               });
@@ -352,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mounted() {
         this.getState();
         this.fetchProfiles();
-        this.initEmptyChart();
+        this.updateProfilePlot(this.selectedProfileId);
         this.initWebSocket();
         this.$refs.firingChart.addEventListener('dblclick', () => {
           if (this.chart) { // Assuming this.chart is your Chart.js instance

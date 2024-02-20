@@ -41,6 +41,8 @@ def get_profile_by_id(profile_id: int) -> Dict[str, Any]:
 
 async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
     global firing_profiles
+    if not profile_id:
+        return []
     
     if not firing_profiles:
         load_firing_profiles()
