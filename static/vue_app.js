@@ -223,30 +223,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Firing process not aborted');
             }
         },
-          postDryChange(isDry) {
-            fetch('/dry-change/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ isDry: isDry })
-            })
-            .then(response => response.json())
-            .then(data => this.plotProfile(data))
-            .catch(error => console.error('Error:', error));
-          },
-          postSoakChange(isSoak) {
-            fetch('/soak-change/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ isSoak: isSoak })
-            })
-            .then(response => response.json())
-            .then(data => this.plotProfile(data))
-            .catch(error => console.error('Error:', error));
-          },
+        postDryChange(isDry) {
+          fetch('/dry-change/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ isDry: isDry })
+          })
+          .then(response => response.json())
+          .then(data => this.plotProfile(data))
+          .catch(error => console.error('Error:', error));
+        },
+        postSoakChange(isSoak) {
+          fetch('/soak-change/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ isSoak: isSoak })
+          })
+          .then(response => response.json())
+          .then(data => this.plotProfile(data))
+          .catch(error => console.error('Error:', error));
+        },
         fetchFiringStartTime() {
           fetch('/firingStartTimestamp/')
               .then(response => response.json())
@@ -296,25 +296,61 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             }
         },
+        getState(){
+          fetch('/state/')
+          .then(response => response.json())  // Make sure this is called as a method
+          .then(data => {
+            this.isFiring = data.isFiring;
+            this.firingName = data.firingName;
+            this.isSoak = data.isSoak;
+            this.isDry = data.isDry;
+            this.selectedProfileId = data.profileID;
+          })
+          .catch(error => console.error('Error fetching initial state:', error));
+        },
+        postStateUpdate() {
+          try {
+              fetch('/update_state/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      isFiring: this.isFiring,
+                      firingName: this.firingName,
+                      isSoak: this.isSoak,
+                      isDry: this.isDry,
+                      profileID: this.selectedProfileId,
+                      // Add other state properties
+                  }),
+              });
+          } catch (error) {
+              console.error('Error posting state update:', error);
+          }
+        },
       },
       watch: {
         selectedProfileId(newVal, oldVal) {
           if (newVal !== oldVal && newVal !== null) {
             this.updateProfilePlot(newVal);
+            this.postStateUpdate();
           }
         },
         isDry(newVal, oldVal) {
           if (newVal !== oldVal) {
             this.postDryChange(newVal);
+            this.postStateUpdate();
           }
         },
         isSoak(newVal, oldVal) {
           if (newVal !== oldVal) {
             this.postSoakChange(newVal);
+            this.postStateUpdate();
           }
         },
       },
       mounted() {
+        this.getState();
         this.fetchProfiles();
         this.initEmptyChart();
         this.initWebSocket();

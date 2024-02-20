@@ -1,7 +1,7 @@
 # No need to import sqlite3 here
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
-from app.routers import sensor, firing
+from app.routers import sensor, firing, app_state
 import asyncio
 from typing import List
 from app.services.websocket_manager import connections, broadcast
@@ -11,6 +11,7 @@ app = FastAPI()
 
 app.include_router(sensor.router)
 app.include_router(firing.router)
+app.include_router(app_state.router)
 
 @app.websocket("/ws/temperature")
 async def websocket_endpoint(websocket: WebSocket):
