@@ -1,7 +1,7 @@
 import json
+import copy
 from typing import List, Dict, Any
 from app.utils.global_state import get_temperature
-from app.models.firing_model import TemperatureProfilePoint
 
 firing_profiles = []
 def load_firing_profiles() -> List[Dict[str, Any]]:
@@ -46,15 +46,62 @@ async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
         load_firing_profiles()
 
     baseTemp = get_temperature()
-    print(baseTemp)
-    start_point = TemperatureProfilePoint(time= 0.0, temperature= baseTemp.temperature)
-    low_ramp_point = TemperatureProfilePoint(time= 0.33, temperature= baseTemp.temperature + 4.0)
     for profile in firing_profiles:
         if profile['id'] == profile_id:
-            
-            profile['temperature_profile'].insert(0, low_ramp_point)
-            profile['temperature_profile'].insert(0, start_point)
+            modified_profile = copy.deepcopy(profile)
+            modified_profile['temperature_profile'].insert(0, dict(time= 0.0, temperature= baseTemp.temperature))
+            modified_profile['temperature_profile'].insert(1, dict(time= 0.33, temperature= baseTemp.temperature + 4.0))
             if isDry:
-                pass
-            return profile
+                # add in a 15 minute dry period at 100 C
+                dry_temp = 100
+                dry_length = 0.25
+                count = 0
+                time1 = 0
+                temp1 = 0
+                for temp in modified_profile['temperature_profile']:
+                    if (temp['temperature'] > dry_temp):
+                        # Find where curve would have hit 100
+                        # y = mx+b
+                        time2 = temp['time']
+                        temp2 = temp['temperature']
+                        m = (temp2 - temp1) / (time2 - time1)
+                        b = temp2 - m * time2
+                        dry_time_start = (dry_temp - b) / m
+                        
+                        modified_profile['temperature_profile'].insert(count, dict(time= dry_time_start, temperature= dry_temp))
+                        modified_profile['temperature_profile'].insert(count + 1, dict(time= dry_time_start + dry_length, temperature= dry_temp))
+                        # push back time of remaining points
+                        for i in range(count+2, len(modified_profile['temperature_profile'])):
+                            modified_profile['temperature_profile'][i]['time'] = modified_profile['temperature_profile'][i]['time'] + dry_length
+                        break
+                    count = count + 1
+                    time1 = temp['time']
+                    temp1 = temp['temperature']
+            if isSoak:
+                # add in a 15 minute soak period at 700 C to burn stuff off
+                soak_temp = 700
+                soak_length = 0.25
+                count = 0
+                time1 = 0
+                temp1 = 0
+                for temp in modified_profile['temperature_profile']:
+                    if (temp['temperature'] > soak_temp):
+                        # Find where curve would have hit 100
+                        # y = mx+b
+                        time2 = temp['time']
+                        temp2 = temp['temperature']
+                        m = (temp2 - temp1) / (time2 - time1)
+                        b = temp2 - m * time2
+                        dry_time_start = (soak_temp - b) / m
+                        
+                        modified_profile['temperature_profile'].insert(count, dict(time= dry_time_start, temperature= soak_temp))
+                        modified_profile['temperature_profile'].insert(count + 1, dict(time= dry_time_start + soak_length, temperature= soak_temp))
+                        # push back time of remaining points
+                        for i in range(count+2, len(modified_profile['temperature_profile'])):
+                            modified_profile['temperature_profile'][i]['time'] = modified_profile['temperature_profile'][i]['time'] + soak_length
+                        break
+                    count = count + 1
+                    time1 = temp['time']
+                    temp1 = temp['temperature']
+            return modified_profile
     return None

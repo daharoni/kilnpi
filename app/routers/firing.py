@@ -17,6 +17,7 @@ def read_profiles():
 
 @router.get("/profiles/{profile_id}/", response_model=FiringProfile)
 async def read_profile(profile_id: int):
+    global profileID
     profileID = profile_id
     profileToPlot = await updateProfile(profileID, isDry, isSoak)
     if profileToPlot is None:
@@ -44,12 +45,17 @@ def start_firing():
 
 @router.post("/dry-change/")
 async def start_firing(body: dict = Body(...)):
+    global isDry
+    
     isDry = body['isDry']
     profileToPlot = await updateProfile(profileID, isDry, isSoak)
     return profileToPlot
 
 @router.post("/soak-change/")
 async def start_firing(body: dict = Body(...)):
+    global isSoak
+    
     isSoak = body['isSoak']
+    
     profileToPlot = await updateProfile(profileID, isDry, isSoak)
     return profileToPlot
