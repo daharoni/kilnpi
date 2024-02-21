@@ -6,8 +6,11 @@ import asyncio
 from typing import List
 from app.services.websocket_manager import connections, broadcast
 from app.services.temperature_sampling import poll_temperature_sensor
+from app.utils.logger import setup_logger
 
 app = FastAPI()
+logger = setup_logger()
+logger.info("Logger is configured")
 
 app.include_router(sensor.router)
 app.include_router(firing.router)
