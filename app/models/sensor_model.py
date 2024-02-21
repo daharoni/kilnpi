@@ -6,4 +6,4 @@ class TemperatureData(BaseModel):
     temperature: Optional[float] = None
     flags: Optional[Dict[str, bool]] = None
     timestamp: datetime
-    timeSinceFiringStart: float
+    timeSinceFiringStart: Optional[float] = None

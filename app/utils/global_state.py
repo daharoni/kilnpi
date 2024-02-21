@@ -5,17 +5,6 @@ from ..models.sensor_model import TemperatureData
 
 last_temperature = TemperatureData(temperature=0.0, flags={}, timestamp=datetime.now(), timeSinceFiringStart=0)
 
-firingStartTime = datetime.now()
-isFiring = False
-
-def set_isFiring(firing: bool):
-    global isFiring
-    isFiring = firing
-    
-def get_isFiring():
-    global isFiring
-    return isFiring
-
 class TemperatureBroadcaster:
     def __init__(self):
         self.listeners = []

@@ -136,15 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
                   return response.json();
               })
               .then(data => {
-                  console.log(data.message);  // Log the success message
-                  // Update any relevant component state here
+                  this.firingStartTimestamp = data.firingStartTime
               })
               .catch(error => {
                   console.error('Error:', error);
               });
                 this.isFiring = true;
-                this.postStateUpdate();
-                this.fetchFiringStartTime();
 
                 // clear plot
                 if (this.chart) {
@@ -188,7 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Error:', error);
                 });
                 this.isFiring = false;
-                this.postStateUpdate();
+                this.kilnTemperatureData = []
+                this.postStateUpdate()
 
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
                 console.log('Firing process aborted');
@@ -267,7 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (dataset) {
                   dataset.data.push({x: timestamp, y: temperature});
                   this.kilnTemperatureData.push({time: timestamp, temperature: temperature});
-                  this.postStateUpdate();
                   this.chart.update();
                 }  
               }
@@ -312,19 +309,16 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedProfileId(newVal, oldVal) {
           if (newVal !== oldVal && newVal !== null) {
             this.updateProfilePlot(newVal);
-            this.postStateUpdate();
           }
         },
         isDry(newVal, oldVal) {
           if (newVal !== oldVal) {
             this.postDryChange(newVal);
-            this.postStateUpdate();
           }
         },
         isSoak(newVal, oldVal) {
           if (newVal !== oldVal) {
             this.postSoakChange(newVal);
-            this.postStateUpdate();
           }
         },
       },

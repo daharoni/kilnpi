@@ -5,10 +5,13 @@ from fastapi import WebSocket
 import json
 from datetime import datetime
 from app.services.websocket_manager import broadcast
-from app.utils.global_state import firingStartTime, broadcast_new_temp
+from app.utils.global_state import broadcast_new_temp, last_temperature
 from app.hardware.max31855 import MAX31855
 from app.hardware.spi_devices import spi_device_class
 from app.models.sensor_model import TemperatureData
+from app.models.firing_model import TemperatureProfilePoint
+from app.routers.app_state import current_state
+
 
 
 # Initialize MAX31855 sensor (adjust bus and device numbers as necessary)
@@ -19,17 +22,25 @@ async def poll_temperature_sensor() -> None:
     An asynchronous function that continuously reads the temperature from a MAX31855 sensor
     and broadcasts the temperature data to connected clients.
     """
+    
 
     while True:
         max_ic_temp, faults = max31855_sensor.read_temperature()
         timestamp = datetime.now()
-        time_since_firing_start = timestamp - firingStartTime
+        if current_state.startFiringTime:
+            time_since_firing_start = timestamp - current_state.startFiringTime
+            time_since_firing_start = time_since_firing_start.total_seconds() / (60 * 60)
+        else:
+            time_since_firing_start = None
         last_temperature = TemperatureData(
             temperature = max_ic_temp,
             faults = faults,
             timestamp= timestamp.isoformat(),
-            timeSinceFiringStart= time_since_firing_start.total_seconds() / (60 * 60)
+            timeSinceFiringStart= time_since_firing_start
         )
         await broadcast_new_temp(last_temperature)
+        if (current_state.isFiring):
+            newPoint = TemperatureProfilePoint(time=time_since_firing_start, temperature=max_ic_temp)
+            current_state.kilnTemperatureData.append(newPoint)
         await broadcast(last_temperature.model_dump_json())
         await asyncio.sleep(3)

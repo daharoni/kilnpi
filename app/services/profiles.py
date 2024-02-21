@@ -2,8 +2,10 @@ import json
 import copy
 from typing import List, Dict, Any
 from app.utils.global_state import get_temperature
+from app.models.app_state_model import AppState
 
 firing_profiles = []
+
 def load_firing_profiles() -> List[Dict[str, Any]]:
     """
     Load firing profiles from a JSON file and return them as a list of dictionaries.
@@ -39,20 +41,31 @@ def get_profile_by_id(profile_id: int) -> Dict[str, Any]:
             return profile
     return None
 
-async def updateProfile(profile_id: int, isDry: bool, isSoak: bool):
+async def updateProfile(state: AppState):
     global firing_profiles
+    
+    profile_id = state.profileID
+    isDry = state.isDry
+    isSoak = state.isSoak
+    
+    
+    baseTemp = get_temperature()
     if not profile_id:
         return []
     
     if not firing_profiles:
         load_firing_profiles()
 
-    baseTemp = get_temperature()
     for profile in firing_profiles:
         if profile['id'] == profile_id:
             modified_profile = copy.deepcopy(profile)
-            modified_profile['temperature_profile'].insert(0, dict(time= 0.0, temperature= baseTemp.temperature))
-            modified_profile['temperature_profile'].insert(1, dict(time= 0.33, temperature= baseTemp.temperature + 4.0))
+            if state.isFiring:
+                firingStartTemperature = state.startFiringTemperatureData.temperature
+                modified_profile['temperature_profile'].insert(0, dict(time= 0.0, temperature= firingStartTemperature))
+                modified_profile['temperature_profile'].insert(1, dict(time= 0.33, temperature= firingStartTemperature + 4.0))
+            else:
+                modified_profile['temperature_profile'].insert(0, dict(time= 0.0, temperature= baseTemp.temperature))
+                modified_profile['temperature_profile'].insert(1, dict(time= 0.33, temperature= baseTemp.temperature + 4.0))
             if isDry:
                 # add in a 15 minute dry period at 100 C
                 dry_temp = 100
