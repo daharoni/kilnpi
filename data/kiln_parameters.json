@@ -1,0 +1,18 @@
+{
+    "kiln_name": "JenKen-Kiln 9-11",
+    "pid_parameters": {
+        "Kp": 1.0,
+        "Ki": 0.01,
+        "Kd": 0.005
+    },
+    "pwm_settings": {
+        "min_duty_cycle": 0,
+        "max_duty_cycle": 100,
+        "period": 5
+    },
+    "safety_parameters": {
+        "max_temperature": 1300,
+        "temperature_threshold_for_alert": 1250
+    },
+    "notes": "This configuration is optimized for general ceramics firing. Adjust PID parameters based on specific requirements."
+}

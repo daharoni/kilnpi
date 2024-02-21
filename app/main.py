@@ -7,6 +7,7 @@ from typing import List
 from app.services.websocket_manager import connections, broadcast
 from app.services.temperature_sampling import poll_temperature_sensor
 from app.utils.logger import setup_logger
+from app.services.firing_runner import run_kiln
 
 app = FastAPI()
 logger = setup_logger()
@@ -34,6 +35,7 @@ async def root():
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(poll_temperature_sensor())
+    asyncio.create_task(run_kiln())
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 

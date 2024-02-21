@@ -178,5 +178,5 @@ nbdist/
 .nb-gradle/
 
 ## logs
-log/
-.log
+logs/
+.logs
