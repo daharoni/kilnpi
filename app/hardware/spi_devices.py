@@ -1,15 +1,20 @@
 import os
 import sys
+import logging
+
+logger = logging.getLogger("logger")
+
 
 if (os.name == 'posix' and not os.getenv('CI')):
     try:
         import spidev
         spi_device_class = spidev.SpiDev
     except ImportError:
-        print("spidev module not found, ensure you're running on Raspberry Pi with spidev installed.")
+        logger.critical("spidev module not found, ensure you're running on Raspberry Pi with spidev installed.")
         sys.exit(1)
 else:
     # Mock spidev for non-POSIX systems (like Windows)
+    
     class MockSPI:
         def __init__(self,spi_response=[0x01, 0x00, 0x00, 0x00]):
             self.spi_response = spi_response
@@ -26,6 +31,7 @@ else:
             pass
     spidev = MockSPI()
     spi_device_class = MockSPI
+    
 
 class SPIDevice:
     def __init__(self, spi_device, bus, device, max_speed_hz=5000000, mode=0b00):

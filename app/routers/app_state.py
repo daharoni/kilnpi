@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, Body
 from app.models.app_state_model import AppState
 from app.services.profiles import updateProfile
@@ -7,18 +8,25 @@ from app.utils.global_state import get_temperature
 
 # Assuming this is stored in a more persistent manner, e.g., database
 router = APIRouter()
+logger = logging.getLogger("logger")
 
 current_state = AppState()
 
 @router.get("/state/")
 async def get_state():
     global current_state
+    global logger
+    
+    logger.info(current_state)
     return current_state
 
 @router.post("/update_state/")
 async def update_state(state: AppState):
     global current_state
+    global logger
+    
     current_state = state
+    logger.info(current_state)
     # print(current_state)
     return {"message": "State updated successfully."}
 

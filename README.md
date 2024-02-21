@@ -84,3 +84,25 @@ This command builds a Docker image from your Dockerfile and tags it as kilnpi.
 
 This command runs your Docker container, mapping port 8000 of the container to port 8000 on your host, allowing you to access the web application as described above.
 
+## Logging
+
+The application uses Python's built-in logging module to log messages. The logger is configured in `main.py` and can be used across all modules in the application. 
+
+### Log Levels
+
+The logger supports different levels of severity for log messages, which are:
+
+- `DEBUG`: Detailed information, typically of interest only when diagnosing problems.
+- `INFO`: Confirmation that things are working as expected.
+- `WARNING`: An indication that something unexpected happened, or indicative of some problem in the near future (e.g., 'disk space low'). The software is still working as expected.
+- `ERROR`: Due to a more serious problem, the software has not been able to perform some function.
+- `CRITICAL`: A serious error, indicating that the program itself may be unable to continue running.
+
+### How to Log Messages
+
+To log messages in any module, first import the `logging` module and obtain a logger instance:
+
+```
+import logging
+logger = logging.getLogger(__name__)
+```
