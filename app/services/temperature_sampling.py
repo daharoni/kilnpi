@@ -12,6 +12,7 @@ from app.models.sensor_model import TemperatureData
 from app.models.firing_model import TemperatureProfilePoint
 from app.routers.app_state import current_state
 import logging
+from database import add_new_temperature_entry
 
 
 
@@ -45,6 +46,8 @@ async def poll_temperature_sensor() -> None:
         
         if (current_state.isFiring):
             newPoint = TemperatureProfilePoint(time=time_since_firing_start, temperature=max_ic_temp)
-            current_state.kilnTemperatureData.append(newPoint)
-        await broadcast(last_temperature.model_dump_json())
+            current_state.kilnTemperatureData.append(newPoint) # adds temp to state tracking to allow webpage refresh
+            await add_new_temperature_entry(last_temperature)
+            
+        await broadcast(last_temperature.model_dump_json()) # Sends new temperature measurement to vue js 
         await asyncio.sleep(3)

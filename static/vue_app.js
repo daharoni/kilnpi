@@ -271,6 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         getState(){
+          // Should try to only call this when the full set of data for refreshing the webpage is needed
           fetch('/state/')
           .then(response => response.json())  // Make sure this is called as a method
           .then(data => {

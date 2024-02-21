@@ -49,8 +49,7 @@ async def add_new_temperature_entry(temp_data: TemperatureData):
         new_measurement = TemperatureMeasurement(
             experiment_id=db_firing_id,
             timestamp=temp_data.timestamp,
-            temperature_kiln=temp_data.temperature,
-            temperature_setpoint=0.0001
+            temperature_kiln=temp_data.temperature
         )
 
         # Add the new temperature measurement to the session and commit
