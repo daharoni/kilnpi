@@ -1,14 +1,15 @@
 from pydantic import BaseModel
 
-class PWMSettings(BaseModel):
-    min_duty_cycle: float
-    max_duty_cycle: float
+class PWMSettings(BaseModel):   
     period: float
 
 class PIDParameters(BaseModel):
     Kp: float
     Ki: float
     Kd: float
+    period: float
+    min_duty_cycle: float
+    max_duty_cycle: float
 
 class SafetyParameters(BaseModel):
     max_temperature: int

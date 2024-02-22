@@ -41,7 +41,7 @@ async def poll_temperature_sensor() -> None:
             timestamp= timestamp.isoformat(),
             timeSinceFiringStart= time_since_firing_start
         )
-        logger.info(last_temperature)
+        # logger.info(last_temperature)
         await broadcast_new_temp(last_temperature)
         
         if (current_state.isFiring):

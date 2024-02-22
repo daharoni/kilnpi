@@ -5,5 +5,5 @@ from typing import Dict, Optional
 class TemperatureData(BaseModel):
     temperature: Optional[float] = None
     flags: Optional[Dict[str, bool]] = None
-    timestamp: datetime
+    timestamp: Optional[datetime] = None
     timeSinceFiringStart: Optional[float] = None

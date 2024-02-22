@@ -1,13 +1,14 @@
 {
     "kiln_name": "JenKen-Kiln 9-11",
     "pid_parameters": {
-        "Kp": 1.0,
+        "Kp": 0.1,
         "Ki": 0.01,
-        "Kd": 0.005
+        "Kd": 0.005,
+        "period": 5,
+        "min_duty_cycle": 0,
+        "max_duty_cycle": 1
     },
     "pwm_settings": {
-        "min_duty_cycle": 0,
-        "max_duty_cycle": 100,
         "period": 5
     },
     "safety_parameters": {
