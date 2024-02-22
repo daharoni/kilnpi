@@ -29,7 +29,7 @@ else:
             return self.spi_response
         def close(self):
             pass
-    spidev = MockSPI()
+    # spidev = MockSPI()
     spi_device_class = MockSPI
     
 

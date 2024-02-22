@@ -10,3 +10,4 @@ requests
 httpx
 sqlalchemy
 spidev
+python3-rpi.gpio

@@ -11,13 +11,14 @@ from app.models.sensor_model import TemperatureData
 from datetime import datetime
 from app.routers.app_state import get_state
 from app.routers.app_state import current_state
+from app.hardware.pwm_relay import PWMRelay, gpio_class
 
 
 
 
 logger = logging.getLogger("logger")
 kiln_temp = TemperatureData()
-
+pmw_relay = PWMRelay(gpio_class, 18, 1.0)
 
 def load_kiln_parameters() -> KilnParameters:
     """
