@@ -8,6 +8,7 @@ from app.models.kiln_model import KilnParameters
 from app.utils.global_state import last_temperature
 from app.utils.global_state import temperature_broadcaster
 from app.models.sensor_model import TemperatureData
+from datetime import datetime
 
 
 
@@ -43,6 +44,11 @@ async def kiln_temperature_listener(temp_data: TemperatureData):
 
 temperature_broadcaster.add_listener(kiln_temperature_listener)
 
+def get_profile_setpoint(time_since_start):
+    # Based on time kiln has been running, find the temperature point from the selected firing profile
+    setpoint = 100
+    return setpoint
+
 async def run_kiln() -> None:
     global logger
     global kiln_temp
@@ -51,5 +57,6 @@ async def run_kiln() -> None:
     pid_controller = PIDController(kiln_params)
 
     while True:
+        setpoint = get_profile_setpoint(kiln_temp.timeSinceFiringStart)
         pid_duty = pid_controller.compute(setpoint=50,measured_value=kiln_temp.temperature, current_time= kiln_temp.timestamp)
         await asyncio.sleep(kiln_params.pid_parameters.period)

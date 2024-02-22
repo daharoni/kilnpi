@@ -66,3 +66,11 @@ async def soak_state_change(body: dict = Body(...)):
     current_state.isSoak = body['isSoak']
     profileToPlot = await updateProfile(current_state)
     return profileToPlot
+
+@router.post("/hold-change/")
+async def dry_state_change(body: dict = Body(...)):
+  
+    
+    current_state.isHold = body['isHold']
+    profileToPlot = await updateProfile(current_state)
+    return profileToPlot

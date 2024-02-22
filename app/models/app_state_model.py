@@ -10,6 +10,7 @@ class AppState(BaseModel):
     firingName: str = ""
     isSoak: bool = False
     isDry: bool = False
+    isHold: bool = False
     profileID: Optional[int] = None
     startFiringTemperatureData: Optional[TemperatureData] = None
     startFiringTime: Optional[datetime] = None

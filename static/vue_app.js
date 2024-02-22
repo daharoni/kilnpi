@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
           firingName: '',
           isSoak: false,
           isDry: false,
+          isHold: false,
           kilnTemperatureData: [],
         };
       },
@@ -220,6 +221,18 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(data => this.plotProfile(data))
           .catch(error => console.error('Error:', error));
         },
+        postHoldChange(isHold) {
+          fetch('/hold-change/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ isHold: isHold })
+          })
+          .then(response => response.json())
+          .then(data => this.plotProfile(data))
+          .catch(error => console.error('Error:', error));
+        },
         fetchFiringStartTime() {
           fetch('/firingStartTimestamp/')
               .then(response => response.json())
@@ -279,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.firingName = data.firingName;
             this.isSoak = data.isSoak;
             this.isDry = data.isDry;
+            this.isHold = data.isHold;
             this.selectedProfileId = data.profileID;
             this.kilnTemperatureData = data.kilnTemperatureData;
           })
@@ -296,6 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       firingName: this.firingName,
                       isSoak: this.isSoak,
                       isDry: this.isDry,
+                      isHold: this.isHold,
                       profileID: this.selectedProfileId,
                       kilnTemperatureData: this.kilnTemperatureData,
                       // Add other state properties
@@ -320,6 +335,11 @@ document.addEventListener('DOMContentLoaded', () => {
         isSoak(newVal, oldVal) {
           if (newVal !== oldVal) {
             this.postSoakChange(newVal);
+          }
+        },
+        isHold(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            this.postHoldChange(newVal);
           }
         },
       },

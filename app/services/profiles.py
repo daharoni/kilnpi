@@ -47,6 +47,7 @@ async def updateProfile(state: AppState):
     profile_id = state.profileID
     isDry = state.isDry
     isSoak = state.isSoak
+    isHold = state.isHold
     
     
     baseTemp = get_temperature()
@@ -119,6 +120,12 @@ async def updateProfile(state: AppState):
                     count = count + 1
                     time1 = temp['time']
                     temp1 = temp['temperature']
+            if isHold:
+                # add in a 15 minute soak period at 700 C to burn stuff off
+                last_profile_temp_info = modified_profile['temperature_profile'][-1]
+                hold_length = 0.25                  
+                modified_profile['temperature_profile'].append(dict(time= last_profile_temp_info['time'] + hold_length, temperature= last_profile_temp_info['temperature']))
+                       
             print(modified_profile)
             return modified_profile
     return None
