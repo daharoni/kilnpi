@@ -17,7 +17,6 @@ async def get_state():
     global current_state
     global logger
     
-    logger.info(current_state)
     return current_state
 
 @router.post("/update_state/")
@@ -53,24 +52,27 @@ def abort_firing():
 
 @router.post("/dry-change/")
 async def dry_state_change(body: dict = Body(...)):
-  
+    global current_state
     
     current_state.isDry = body['isDry']
     profileToPlot = await updateProfile(current_state)
+    current_state.firingProfile = profileToPlot
     return profileToPlot
 
 @router.post("/soak-change/")
 async def soak_state_change(body: dict = Body(...)):
-
+    global current_state
     
     current_state.isSoak = body['isSoak']
     profileToPlot = await updateProfile(current_state)
+    current_state.firingProfile = profileToPlot
     return profileToPlot
 
 @router.post("/hold-change/")
 async def dry_state_change(body: dict = Body(...)):
-  
+    global current_state
     
     current_state.isHold = body['isHold']
     profileToPlot = await updateProfile(current_state)
+    current_state.firingProfile = profileToPlot
     return profileToPlot

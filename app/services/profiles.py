@@ -126,6 +126,6 @@ async def updateProfile(state: AppState):
                 hold_length = 0.25                  
                 modified_profile['temperature_profile'].append(dict(time= last_profile_temp_info['time'] + hold_length, temperature= last_profile_temp_info['temperature']))
                        
-            print(modified_profile)
+            # print(modified_profile)
             return modified_profile
     return None

@@ -19,6 +19,7 @@ def read_profiles():
 async def read_profile(profile_id: int):
     current_state.profileID = profile_id
     profileToPlot = await updateProfile(current_state)
+    current_state.firingProfile = profileToPlot # TODO: should be done in a better way
     if profileToPlot is None:
         raise HTTPException(status_code=404, detail="Profile not found")
     return profileToPlot
