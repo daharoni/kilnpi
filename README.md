@@ -42,6 +42,10 @@ On Unix or MacOS, use:
 
 `pip install -r requirements.txt`
 
+5. If running on a raspberry pi, you will also need to install raspberry pi specific requirements:
+
+`pip install -r requirements-rpi.txt`
+
 ## How to run the server
 This project has Docker setup but I don't know enough yet for describing exactly how to use it.
 
@@ -70,6 +74,12 @@ COPY . .
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
+If running on a raspberry pi you also need to add:
+
+```
+COPY requirements-rpi.txt .
+RUN pip install --no-cache-dir -r requirements-rpi.txt
+```
 This Dockerfile uses the official Python 3.8 image, installs your Python dependencies, copies your project files into the image, and specifies the command to start your FastAPI server.
 
 3. Build the Docker Image: In your terminal navigate to the project root directory and run:
