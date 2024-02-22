@@ -18,7 +18,7 @@ from app.hardware.pwm_relay import PWMRelay, gpio_class
 
 logger = logging.getLogger("logger")
 kiln_temp = TemperatureData()
-pmw_relay = PWMRelay(gpio_class, 18, 1.0)
+
 
 def load_kiln_parameters() -> KilnParameters:
     """
@@ -76,18 +76,37 @@ def get_profile_setpoint(time_since_start):
     else:
         return None
 
+        
 async def run_kiln() -> None:
     global logger
     global kiln_temp
     
+   
+    
     kiln_params = load_kiln_parameters()
     pid_controller = PIDController(kiln_params)
+    
+    pin = 18
+    frequency = 1.0 / kiln_params.pwm_settings.period
+    pwm_relay = PWMRelay(gpio_class, 18, frequency)
+    
+    
 
     while True:
         if current_state.isFiring:
+            if not pwm_relay.isRunning:
+                pwm_relay.start(0)
             if (kiln_temp.timeSinceFiringStart):
                 setpoint = get_profile_setpoint(kiln_temp.timeSinceFiringStart)
                 if setpoint:
                     value = kiln_temp.temperature
                     pid_duty = pid_controller.compute(setpoint= setpoint,measured_value= value, current_time= kiln_temp.timestamp)
+
+                    if (pid_duty is not None):
+                        pwm_relay.change_duty_cycle(pid_duty * 100)
+        else:
+            if pwm_relay.isRunning:
+                pwm_relay.stop()
+            
         await asyncio.sleep(kiln_params.pid_parameters.period)
+        

@@ -102,6 +102,7 @@ class PWMRelay:
         self.pwm = None
         self.GPIO.setmode(self.GPIO.BCM)
         self.GPIO.setup(pin, self.GPIO.OUT)
+        self.isRunning = False
 
     def start(self, duty_cycle):
         if self.pwm is None:
@@ -109,12 +110,21 @@ class PWMRelay:
             self.pwm.start(duty_cycle)
         else:
             self.pwm.ChangeDutyCycle(duty_cycle)
+        self.isRunning = True
         print(f"Kiln started with duty cycle {duty_cycle}%")
+
+    def change_duty_cycle(self, duty_cycle):
+        if self.pwm is not None:
+            self.pwm.ChangeDutyCycle(duty_cycle)
+            print(f"Heating element duty cycle changed to {duty_cycle}%")
+        else:
+            print("Heating element controller is not running. Please start it first.")
 
     def stop(self):
         if self.pwm:
             self.pwm.stop()
             self.pwm = None
+            self.isRunning = False
         print("Kiln PWM relay controller stopped")
 
     def cleanup(self):
