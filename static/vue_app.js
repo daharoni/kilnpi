@@ -173,9 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     dataset.data = [];
                     this.chart.update();
 
-                  dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Duty Cycle');
-                  if (dataset) {
-                    dataset.data = [];
+                  const dataset2 = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Duty Cycle');
+                  if (dataset2) {
+                    dataset2.data = [];
                     this.chart.update();
                   }  
                   }  
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
               .catch(error => console.error('Error fetching firing start time:', error));
         },
         initWebSocket() {
-          const ws = new WebSocket("ws://192.168.86.90:8000/ws/temperature"); // Adjust URL to your WebSocket endpoint
+          const ws = new WebSocket("ws://192.168.86.90:8000/ws/new_data_to_plot"); // Adjust URL to your WebSocket endpoint
           //const ws = new WebSocket("ws://localhost:8000/ws/new_data_to_plot"); // Adjust URL to your WebSocket endpoint
           ws.onopen = () => {
             console.log("WebSocket connection established");
