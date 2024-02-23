@@ -67,6 +67,8 @@ This project has Docker setup but I don't know enough yet for describing exactly
 This command starts the server, making it accessible on the host device's IP address on port 8000.
 2. To access the client-side webpage, open a web browser and navigate to `http://<host's IP address>:8000/static/index.html`, replacing `<host's IP address>` with your host/server's actual IP address.
 
+To get the IP address of your pi, run `ifconfig` and look at the `inet` address in the `wlan` section.
+
 ## Using Docker
 If you prefer to containerize your application with Docker, here's a basic guide to get you started:
 

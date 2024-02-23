@@ -13,6 +13,8 @@ class MAX31855(SPIDevice):
         """Read the thermocouple temperature data from the MAX31855 sensor."""
         value = self.read_raw_data()
         
+        print(f"MAX31855 value -> {value}")
+        
         # Check for fault bit (D16)
         if value & 0x00010000:
             return None, self.read_faults(value)

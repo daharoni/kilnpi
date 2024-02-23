@@ -9,6 +9,7 @@ if (os.name == 'posix' and not os.getenv('CI')):
     try:
         import spidev
         spi_device_class = spidev.SpiDev
+        print(f"Using spidev and not MockSPI")
     except ImportError:
         logger.critical("spidev module not found, ensure you're running on Raspberry Pi with spidev installed.")
         sys.exit(1)
