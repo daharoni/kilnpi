@@ -51,6 +51,11 @@ async def poll_temperature_sensor() -> None:
             newPoint = TemperatureProfilePoint(time=time_since_firing_start, temperature=max_ic_temp)
             current_state.kilnTemperatureData.append(newPoint) # adds temp to state tracking to allow webpage refresh
             await add_new_temperature_entry(last_temperature)
-            
-        await broadcast(last_temperature.model_dump_json()) # Sends new temperature measurement to vue js 
+        
+        time_since_last_display_update = timestamp - last_timestamp
+        
+        if (time_since_last_display_update.total_seconds >= kiln_params.display_parameters.temperature_display_period):
+            await broadcast(last_temperature.model_dump_json()) # Sends new temperature measurement to vue js 
+            last_timestamp = timestamp
+       
         await asyncio.sleep(kiln_params.sensor_parameters.temperature_sampling_period)

@@ -18,5 +18,8 @@
     "sensor_parameters": {
         "temperature_sampling_period": 0.5
     },
+    "display_parameters": {
+        "temperature_display_period": 1.0
+    },
     "notes": "This configuration is optimized for general ceramics firing. Adjust PID parameters based on specific requirements."
 }

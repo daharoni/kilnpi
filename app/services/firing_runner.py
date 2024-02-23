@@ -17,13 +17,18 @@ from app.hardware.pwm_relay import PWMRelay, gpio_class
 
 
 logger = logging.getLogger("logger")
-kiln_temp = TemperatureData()
+kiln_temp_smoothed = None
+kiln_temp_history = []
 
 
 
 async def kiln_temperature_listener(temp_data: TemperatureData):
     global kiln_temp
+    global kiln_temp_history
+    
     kiln_temp = temp_data
+    kiln_temp_history.append(temp_data.temperature)
+    kiln_temp_history = kiln_temp_history[-4:]
 
 temperature_broadcaster.add_listener(kiln_temperature_listener)
 
@@ -60,6 +65,7 @@ def get_profile_setpoint(time_since_start):
 async def run_kiln() -> None:
     global logger
     global kiln_temp
+    global kiln_temp_history
     
    
     
@@ -79,9 +85,9 @@ async def run_kiln() -> None:
             if (kiln_temp.timeSinceFiringStart):
                 setpoint = get_profile_setpoint(kiln_temp.timeSinceFiringStart)
                 if setpoint:
-                    value = kiln_temp.temperature
-                    if (value is not None):
-                        pid_duty = pid_controller.compute(setpoint= setpoint,measured_value= value, current_time= kiln_temp.timestamp)
+                    kiln_temp_smoothed = sum(kiln_temp_history) / len(kiln_temp_history)
+                    if (kiln_temp_smoothed is not None):
+                        pid_duty = pid_controller.compute(setpoint= setpoint,measured_value= kiln_temp_smoothed, current_time= kiln_temp.timestamp)
                         if (pid_duty is not None):
                             pwm_relay.change_duty_cycle(pid_duty * 100)
                     else:

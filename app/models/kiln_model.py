@@ -18,10 +18,14 @@ class SafetyParameters(BaseModel):
 class SensorParameters(BaseModel):
     temperature_sampling_period: float
     
+class DisplayParameters(BaseModel):
+    temperature_display_period: float
+    
 class KilnParameters(BaseModel):
     kiln_name: str
     pid_parameters: PIDParameters
     pwm_settings: PWMSettings
     safety_parameters: SafetyParameters
     sensor_parameters: SensorParameters
+    display_parameters: DisplayParameters
     notes: str
