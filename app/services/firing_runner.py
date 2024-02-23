@@ -10,7 +10,7 @@ from app.utils.global_state import temperature_broadcaster
 from app.models.sensor_model import TemperatureData
 from datetime import datetime
 from app.routers.app_state import get_state
-from app.routers.app_state import current_state
+from app.routers.app_state import current_state, get_kiln_parameters
 from app.hardware.pwm_relay import PWMRelay, gpio_class
 
 
@@ -20,26 +20,6 @@ logger = logging.getLogger("logger")
 kiln_temp = TemperatureData()
 
 
-def load_kiln_parameters() -> KilnParameters:
-    """
-    Load firing profiles from a JSON file and return them as a list of dictionaries.
-
-    Returns:
-        List[Dict[str, Any]]: A list of dictionaries representing firing profiles.
-    """
-    global logger
-    
-    try:
-        with open('data/kiln_parameters.json') as f:
-            data = json.load(f)
-        
-            # Parse the JSON data into a Pydantic model
-            kiln_params = KilnParameters.model_validate(data)
-            logger.info(f"Read kiln parameters file: {kiln_params}")
-            return kiln_params
-    except IOError as e:
-        logger.error(f"Error opening or reading the kiln parameter file: {e}")
-        return None
 
 async def kiln_temperature_listener(temp_data: TemperatureData):
     global kiln_temp
@@ -83,7 +63,7 @@ async def run_kiln() -> None:
     
    
     
-    kiln_params = load_kiln_parameters()
+    kiln_params = get_kiln_parameters()
     pid_controller = PIDController(kiln_params)
     
     pin = 18
@@ -100,10 +80,12 @@ async def run_kiln() -> None:
                 setpoint = get_profile_setpoint(kiln_temp.timeSinceFiringStart)
                 if setpoint:
                     value = kiln_temp.temperature
-                    pid_duty = pid_controller.compute(setpoint= setpoint,measured_value= value, current_time= kiln_temp.timestamp)
-
-                    if (pid_duty is not None):
-                        pwm_relay.change_duty_cycle(pid_duty * 100)
+                    if (value is not None):
+                        pid_duty = pid_controller.compute(setpoint= setpoint,measured_value= value, current_time= kiln_temp.timestamp)
+                        if (pid_duty is not None):
+                            pwm_relay.change_duty_cycle(pid_duty * 100)
+                    else:
+                        print(f"Fault with temperature sensor -> {kiln_temp.faults}")
         else:
             if pwm_relay.isRunning:
                 pwm_relay.stop()

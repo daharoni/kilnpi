@@ -4,16 +4,19 @@
         "Kp": 0.1,
         "Ki": 0.01,
         "Kd": 0.005,
-        "period": 5,
+        "period": 1,
         "min_duty_cycle": 0,
         "max_duty_cycle": 1
     },
     "pwm_settings": {
-        "period": 5
+        "period": 1
     },
     "safety_parameters": {
         "max_temperature": 1300,
         "temperature_threshold_for_alert": 1250
+    },
+    "sensor_parameters": {
+        "temperature_sampling_period": 0.5
     },
     "notes": "This configuration is optimized for general ceramics firing. Adjust PID parameters based on specific requirements."
 }

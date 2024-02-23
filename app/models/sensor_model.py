@@ -4,6 +4,6 @@ from typing import Dict, Optional
 
 class TemperatureData(BaseModel):
     temperature: Optional[float] = None
-    flags: Optional[Dict[str, bool]] = None
+    faults: Optional[Dict[str, bool]] = None
     timestamp: Optional[datetime] = None
     timeSinceFiringStart: Optional[float] = None

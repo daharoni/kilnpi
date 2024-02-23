@@ -1,10 +1,12 @@
 import logging
+import json
 from fastapi import APIRouter, Body
 from app.models.app_state_model import AppState
 from app.services.profiles import updateProfile
 from datetime import datetime
 from database import add_new_firing
 from app.utils.global_state import get_temperature
+from app.models.kiln_model import KilnParameters
 
 # Assuming this is stored in a more persistent manner, e.g., database
 router = APIRouter()
@@ -12,6 +14,28 @@ logger = logging.getLogger("logger")
 
 current_state = AppState()
 
+
+def get_kiln_parameters() -> KilnParameters:
+    """
+    Load firing profiles from a JSON file and return them as a list of dictionaries.
+
+    Returns:
+        List[Dict[str, Any]]: A list of dictionaries representing firing profiles.
+    """
+    global logger
+    
+    try:
+        with open('data/kiln_parameters.json') as f:
+            data = json.load(f)
+        
+            # Parse the JSON data into a Pydantic model
+            kiln_params = KilnParameters.model_validate(data)
+            logger.info(f"Read kiln parameters file: {kiln_params}")
+            return kiln_params
+    except IOError as e:
+        logger.error(f"Error opening or reading the kiln parameter file: {e}")
+        return None
+    
 @router.get("/state/")
 async def get_state():
     global current_state
