@@ -30,6 +30,7 @@ async def poll_temperature_sensor() -> None:
     while True:
         max_ic_temp, faults = max31855_sensor.read_temperature()
         timestamp = datetime.now()
+        print(f"Temp -> {max_ic_temp}")
         if current_state.startFiringTime:
             time_since_firing_start = timestamp - current_state.startFiringTime
             time_since_firing_start = time_since_firing_start.total_seconds() / (60 * 60)

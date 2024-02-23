@@ -88,7 +88,7 @@ async def run_kiln() -> None:
     
     pin = 18
     frequency = 1.0 / kiln_params.pwm_settings.period
-    pwm_relay = PWMRelay(gpio_class, 18, frequency)
+    pwm_relay = PWMRelay(gpio_class, 12, frequency)
     
     
 

@@ -11,7 +11,6 @@ class MAX31855(SPIDevice):
 
     def read_temperature(self):
         """Read the thermocouple temperature data from the MAX31855 sensor."""
-        value = self.read_raw_data()
         
         print(f"MAX31855 value -> {value}")
         
