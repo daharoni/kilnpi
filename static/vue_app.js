@@ -145,6 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 // The user clicked "OK"
                 // Disable the profile selector dropdown
                 // The user clicked "OK", send the signal to the backend
+                this.kilnTemperatureData = [];
+                this.dutyCycleData = [];
+                
+
                 fetch('/start-firing/', {
                 method: 'POST',
                 headers: {
@@ -180,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   }  
                   }  
                 }
+                //this.postStateUpdate();
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
                 console.log('Firing process started');
                 // ... your existing code to start the firing ...
@@ -214,8 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Error:', error);
                 });
                 this.isFiring = false;
-                this.kilnTemperatureData = []
-                this.dutyCycleData = []
                 this.postStateUpdate()
 
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
@@ -289,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
           };
           ws.onmessage = (event) => {
               const data = JSON.parse(event.data);
-              //console.log(data)
+              // console.log(data)
               if (data.type == "temperature_data") {
                 this.currentTemperature = data.temperature;
                 this.updateChart("Kiln Temperature", data.temperature, data.timeSinceFiringStart);

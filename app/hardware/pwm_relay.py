@@ -116,7 +116,7 @@ class PWMRelay:
     def change_duty_cycle(self, duty_cycle):
         if self.pwm is not None:
             self.pwm.ChangeDutyCycle(duty_cycle)
-            print(f"Heating element duty cycle changed to {duty_cycle}%")
+            # print(f"Heating element duty cycle changed to {duty_cycle}%")
         else:
             print("Heating element controller is not running. Please start it first.")
 

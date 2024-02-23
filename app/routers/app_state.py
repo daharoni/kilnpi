@@ -55,10 +55,14 @@ async def update_state(state: AppState):
 
 @router.get("/firingStartTimestamp/")
 def get_firingStartTimestamp():
+    global current_state
+    
     return {"firingStartTime": current_state.startFiringTime.isoformat()}
 
 @router.post("/start-firing/")
 def start_firing(body: dict = Body(...)):
+    global current_state
+    
     current_state.firingName = body['firingName']
     add_new_firing(current_state.firingName) # addes a new db entry for tracking this firing
     # TODO: start db logging and PID and GPIO control of relays
@@ -70,6 +74,8 @@ def start_firing(body: dict = Body(...)):
 
 @router.post("/abort-firing/")
 def abort_firing():
+    global current_state
+    
     current_state.isFiring = False
     print("Firing process aborted.")
     return {"message": "Firing process aborted successfully."}

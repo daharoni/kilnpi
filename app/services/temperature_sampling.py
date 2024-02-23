@@ -27,18 +27,22 @@ async def poll_temperature_sensor() -> None:
     and broadcasts the temperature data to connected clients.
     """
     global logger
+    
     kiln_params = get_kiln_parameters()
     last_timestamp = datetime.now()
+
 
     while True:
         max_ic_temp, faults = max31855_sensor.read_temperature()
         timestamp = datetime.now()
         # print(f"Temp -> {max_ic_temp} and fauts -> {faults}")
+        # print(current_state)
         if current_state.startFiringTime:
             time_since_firing_start = timestamp - current_state.startFiringTime
             time_since_firing_start = time_since_firing_start.total_seconds() / (60 * 60)
         else:
             time_since_firing_start = None
+            
         last_temperature = TemperatureData(
             temperature = max_ic_temp,
             faults = faults,
