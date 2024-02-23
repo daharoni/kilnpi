@@ -271,7 +271,10 @@ document.addEventListener('DOMContentLoaded', () => {
               .catch(error => console.error('Error fetching firing start time:', error));
         },
         initWebSocket() {
-          const ws = new WebSocket("ws://192.168.86.90:8000/ws/new_data_to_plot"); // Adjust URL to your WebSocket endpoint
+          const host = window.location.hostname;
+          const port = "8000"; // Specify the port your WebSocket server is running on
+          const wsURL = `ws://${host}:${port}/ws/new_data_to_plot`;
+          const ws = new WebSocket(wsURL); // Adjust URL to your WebSocket endpoint
           //const ws = new WebSocket("ws://localhost:8000/ws/new_data_to_plot"); // Adjust URL to your WebSocket endpoint
           ws.onopen = () => {
             console.log("WebSocket connection established");
