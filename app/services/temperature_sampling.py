@@ -28,6 +28,7 @@ async def poll_temperature_sensor() -> None:
     """
     global logger
     kiln_params = get_kiln_parameters()
+    last_timestamp = datetime.now()
 
     while True:
         max_ic_temp, faults = max31855_sensor.read_temperature()
@@ -54,7 +55,7 @@ async def poll_temperature_sensor() -> None:
         
         time_since_last_display_update = timestamp - last_timestamp
         
-        if (time_since_last_display_update.total_seconds >= kiln_params.display_parameters.temperature_display_period):
+        if (time_since_last_display_update.total_seconds() >= kiln_params.display_parameters.temperature_display_period):
             await broadcast(last_temperature.model_dump_json()) # Sends new temperature measurement to vue js 
             last_timestamp = timestamp
        

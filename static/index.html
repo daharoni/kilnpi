@@ -76,6 +76,7 @@
             <button @click="abortFiring" :disabled="!isFiring">Abort Firing</button>
         </div>
         <div>Current Temperature: {{ currentTemperature }} °C</div>
+        <div>Current Duty Cycle: {{ currentDutyCycle }}%</div>
         <input type="text" v-model="firingName" placeholder="Enter name or notes of firing">
         <div class="checkbox-container">
             <div>

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
           selectedProfileId: null,
           pastFirings: [],
           currentTemperature: '',
+          currentDutyCycle: '',
           // chart: null,
           isFiring: false,
           firingStartTimestamp: '',
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
           isDry: false,
           isHold: false,
           kilnTemperatureData: [],
+          dutyCycleData: [],
         };
       },
       methods: {
@@ -54,7 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   fill: false,
                   borderColor: 'rgb(255, 99, 132)',
                   borderWidth: 2,
-                  tension: 0.1
+                  tension: 0.1,
+                  yAxisID: 'y',
                 },
                 {
                   label: 'Kiln Temperature',
@@ -62,7 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
                   fill: false,
                   borderColor: 'rgb(54, 162, 235)',
                   borderWidth: 4,
-                  tension: 0.1
+                  tension: 0.1,
+                  yAxisID: 'y',
+                },
+                {
+                  label: 'Kiln Duty Cycle',
+                  data: this.dutyCycleData.map(point => ({x: point.time, y: point.duty_cycle})),
+                  fill: false,
+                  borderColor: 'rgb(75, 192, 192)',
+                  borderWidth: 4,
+                  tension: 0.1,
+                  yAxisID: 'y1',
                 }
               ]
             },
@@ -112,6 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
                   },
                   min: 0,
                   max: 1300
+                },
+                y1: {
+                  title: {
+                    display: true,
+                    text: 'Duty Cycle (%)'
+                  },
+                  min: 0,
+                  max: 100,
+                  position: 'right',
                 }
               }
             }
@@ -150,6 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
                   if (dataset) {
                     dataset.data = [];
                     this.chart.update();
+
+                  dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Duty Cycle');
+                  if (dataset) {
+                    dataset.data = [];
+                    this.chart.update();
+                  }  
                   }  
                 }
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
@@ -187,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 this.isFiring = false;
                 this.kilnTemperatureData = []
+                this.dutyCycleData = []
                 this.postStateUpdate()
 
                 // Add your logic to start the firing process, e.g., making a POST request to the backend
@@ -242,7 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
               .catch(error => console.error('Error fetching firing start time:', error));
         },
         initWebSocket() {
-          const ws = new WebSocket("ws://192.168.86.90:8000/ws/temperature"); // Adjust URL to your WebSocket endpoint
+          // const ws = new WebSocket("ws://192.168.86.90:8000/ws/temperature"); // Adjust URL to your WebSocket endpoint
+          const ws = new WebSocket("ws://localhost:8000/ws/new_data_to_plot"); // Adjust URL to your WebSocket endpoint
           ws.onopen = () => {
             console.log("WebSocket connection established");
           };
@@ -256,10 +286,15 @@ document.addEventListener('DOMContentLoaded', () => {
           };
           ws.onmessage = (event) => {
               const data = JSON.parse(event.data);
-              this.currentTemperature = data.temperature
-              // console.log(data.timestamp);
-              // TODO: Only update when isFiring is true
-              this.updateChart(data.temperature, data.timeSinceFiringStart);
+              //console.log(data)
+              if (data.type == "temperature_data") {
+                this.currentTemperature = data.temperature;
+                this.updateChart("Kiln Temperature", data.temperature, data.timeSinceFiringStart);
+              }
+              if (data.type == "duty_cycle_data"){
+                this.currentDutyCycle = data.duty_cycle;
+                this.updateChart('Kiln Duty Cycle', data.duty_cycle, data.timeSinceFiringStart);
+              }
           };
         },
         calculateTimeDifference(dateTimeStr1, dateTimeStr2) {
@@ -270,14 +305,21 @@ document.addEventListener('DOMContentLoaded', () => {
           const diffHours = diffMilliseconds / (1000 * 60 * 60);
           return diffHours; // Or format it as needed
         },
-        updateChart(temperature, timestamp) {
+        updateChart(curveName, yValue, timestamp) {
             // Assuming your temperature data includes a timestamp in a format suitable for the chart's x-axis
             if (this.isFiring) {
               if (this.chart) {
-                const dataset = this.chart.data.datasets.find(dataset => dataset.label == 'Kiln Temperature');
+                const dataset = this.chart.data.datasets.find(dataset => dataset.label == curveName);
                 if (dataset) {
-                  dataset.data.push({x: timestamp, y: temperature});
-                  this.kilnTemperatureData.push({time: timestamp, temperature: temperature});
+                  
+                  if (curveName == 'Kiln Temperature') {
+                    dataset.data.push({x: timestamp, y: yValue});
+                    this.kilnTemperatureData.push({time: timestamp, temperature: yValue});
+                  }
+                  if (curveName == 'Kiln Duty Cycle') {
+                    dataset.data.push({x: timestamp, y: yValue});
+                    this.dutyCycleData.push({time: timestamp, duty_cycle: yValue});
+                  }
                   this.chart.update();
                 }  
               }
@@ -295,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.isHold = data.isHold;
             this.selectedProfileId = data.profileID;
             this.kilnTemperatureData = data.kilnTemperatureData;
+            this.dutyCycleData = data.dutyCycleData;
           })
           .catch(error => console.error('Error fetching initial state:', error));
         },
@@ -313,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       isHold: this.isHold,
                       profileID: this.selectedProfileId,
                       kilnTemperatureData: this.kilnTemperatureData,
-                      // Add other state properties
+                      dutyCycleData: this.dutyCycleData,
                   }),
               });
           } catch (error) {

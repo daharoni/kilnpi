@@ -17,7 +17,7 @@ app.include_router(sensor.router)
 app.include_router(firing.router)
 app.include_router(app_state.router)
 
-@app.websocket("/ws/temperature")
+@app.websocket("/ws/new_data_to_plot")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     connections.append(websocket)

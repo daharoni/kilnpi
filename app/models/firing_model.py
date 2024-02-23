@@ -10,3 +10,4 @@ class FiringProfile(BaseModel):
     name: str
     max_temperature: float
     temperature_profile: List[TemperatureProfilePoint]
+    

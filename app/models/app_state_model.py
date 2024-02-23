@@ -5,6 +5,10 @@ from datetime import datetime
 from app.models.firing_model import TemperatureProfilePoint
 from app.models.sensor_model import TemperatureData
 
+class DutyCycleProfilePoint(BaseModel):
+    time: float  # Hours 
+    dutyCycle: float  # Duty Cycle at the given time
+    
 class AppState(BaseModel):
     isFiring: bool = False
     firingName: str = ""
@@ -15,6 +19,7 @@ class AppState(BaseModel):
     startFiringTemperatureData: Optional[TemperatureData] = None
     startFiringTime: Optional[datetime] = None
     kilnTemperatureData: List[TemperatureProfilePoint] = []
+    dutyCycleData: List[TemperatureProfilePoint] = []
     firingProfile: Optional[Dict[str, Any]] = None # TODO: Make into pydantic model
 
 

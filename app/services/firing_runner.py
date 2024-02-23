@@ -7,11 +7,12 @@ from pydantic import BaseModel
 from app.models.kiln_model import KilnParameters
 from app.utils.global_state import last_temperature
 from app.utils.global_state import temperature_broadcaster
-from app.models.sensor_model import TemperatureData
+from app.models.sensor_model import TemperatureData, DutyCycleData
 from datetime import datetime
 from app.routers.app_state import get_state
 from app.routers.app_state import current_state, get_kiln_parameters
 from app.hardware.pwm_relay import PWMRelay, gpio_class
+from app.services.websocket_manager import broadcast
 
 
 
@@ -67,7 +68,7 @@ async def run_kiln() -> None:
     global kiln_temp
     global kiln_temp_history
     
-   
+    last_timestamp = datetime.now()
     
     kiln_params = get_kiln_parameters()
     pid_controller = PIDController(kiln_params)
@@ -76,7 +77,7 @@ async def run_kiln() -> None:
     frequency = 1.0 / kiln_params.pwm_settings.period
     pwm_relay = PWMRelay(gpio_class, 12, frequency)
     
-    
+    duty_cycle_data = DutyCycleData()
 
     while True:
         if current_state.isFiring:
@@ -87,14 +88,26 @@ async def run_kiln() -> None:
                 if setpoint:
                     kiln_temp_smoothed = sum(kiln_temp_history) / len(kiln_temp_history)
                     if (kiln_temp_smoothed is not None):
-                        pid_duty = pid_controller.compute(setpoint= setpoint,measured_value= kiln_temp_smoothed, current_time= kiln_temp.timestamp)
-                        if (pid_duty is not None):
-                            pwm_relay.change_duty_cycle(pid_duty * 100)
+                        duty_cycle_data.duty_cycle = pid_controller.compute(setpoint= setpoint,measured_value= kiln_temp_smoothed, current_time= kiln_temp.timestamp)
+                        
+                        duty_cycle_data.timestamp = datetime.now()
+                        duty_cycle_data.timeSinceFiringStart = duty_cycle_data.timestamp - current_state.startFiringTime
+                        duty_cycle_data.timeSinceFiringStart = duty_cycle_data.timeSinceFiringStart.total_seconds() / (60 * 60)
+                        
+                        if (duty_cycle_data.duty_cycle is not None):
+                            pwm_relay.change_duty_cycle(duty_cycle_data.duty_cycle * 100)
                     else:
                         print(f"Fault with temperature sensor -> {kiln_temp.faults}")
         else:
             if pwm_relay.isRunning:
                 pwm_relay.stop()
+                
+        timestamp = datetime.now()
+        time_since_last_display_update = timestamp - last_timestamp
+        
+        if (time_since_last_display_update.total_seconds() >= kiln_params.display_parameters.temperature_display_period):
+            await broadcast(duty_cycle_data.model_dump_json()) # Sends new temperature measurement to vue js 
+            last_timestamp = timestamp
             
         await asyncio.sleep(kiln_params.pid_parameters.period)
         
