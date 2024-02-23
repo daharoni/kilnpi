@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
               .catch(error => console.error('Error fetching firing start time:', error));
         },
         initWebSocket() {
-          const ws = new WebSocket("ws://localhost:8000/ws/temperature"); // Adjust URL to your WebSocket endpoint
+          const ws = new WebSocket("ws://192.168.86.90:8000/ws/temperature"); // Adjust URL to your WebSocket endpoint
           ws.onopen = () => {
             console.log("WebSocket connection established");
           };
