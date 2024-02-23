@@ -46,6 +46,18 @@ On Unix or MacOS, use:
 
 `pip install -r requirements-rpi.txt`
 
+## Enabling SPI on the Pi
+To be able to communicate with the MAX81355 thermocouple sensor, we need to enable SPI in the Raspberry Pi.
+1. Open /boot/config.txt. This can be done from the root directory usually by the command:
+`sudo nano /boot/config.txt
+2. Next, uncomment the line of the file that will enable SPI. This usually looks something like `dtparam=spi=on`.
+3. Save the changes. Press `Ctrl + O` to save the file. nano will ask you to confirm the file name; just press Enter to confirm.
+4. Reboot the Pi. `sudo reboot`
+
+If you want to check to see if SPI is enabled after making these changes, run the following and it should show something like `/dev/spidev0.0` and `/dev/spidev0.1`
+
+`ls -l /dev/spi*`
+
 ## How to run the server
 This project has Docker setup but I don't know enough yet for describing exactly how to use it.
 
