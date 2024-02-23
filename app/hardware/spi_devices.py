@@ -35,7 +35,7 @@ else:
     
 
 class SPIDevice:
-    def __init__(self, spi_device, bus, device, max_speed_hz=5000000, mode=0b00):
+    def __init__(self, spi_device, bus, device, max_speed_hz=400000, mode=0b00):
         if callable(spi_device):
             self.spi = spi_device()  # If spi_device is a class, instantiate it
         else:
@@ -45,6 +45,7 @@ class SPIDevice:
         self.device = device
         self.spi.open(self.bus, self.device)
         self.spi.max_speed_hz = max_speed_hz
+        self.spi.lsbfirst = False
         self.spi.mode = mode
 
     def read_bytes(self, num_bytes):
