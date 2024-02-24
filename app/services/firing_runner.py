@@ -74,7 +74,7 @@ async def run_kiln() -> None:
     pid_controller = PIDController(kiln_params)
     
     pin = 12
-    frequency = 1.0 / kiln_params.pwm_settings.period
+    frequency = kiln_params.pwm_settings.period / kiln_params.pwm_settings.period
     pwm_relay = PWMRelay(gpio_class, pin, frequency)
     
     duty_cycle_data = DutyCycleData()
