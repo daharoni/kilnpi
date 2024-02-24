@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
           isHold: false,
           kilnTemperatureData: [],
           dutyCycleData: [],
+          timeSinceStart: '',
         };
       },
       methods: {
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                   label: 'Kiln Duty Cycle',
-                  data: this.dutyCycleData.map(point => ({x: point.time, y: point.duty_cycle})),
+                  data: this.dutyCycleData.map(point => ({x: point.time, y: 100*point.duty_cycle})),
                   fill: false,
                   borderColor: 'rgb(75, 192, 192)',
                   borderWidth: 4,
@@ -132,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Duty Cycle (%)'
                   },
                   min: 0,
-                  max: 1,
+                  max: 100,
                   position: 'right',
                 }
               }
@@ -295,10 +296,12 @@ document.addEventListener('DOMContentLoaded', () => {
               // console.log(data)
               if (data.type == "temperature_data") {
                 this.currentTemperature = data.temperature;
+                this.timeSinceStart = data.timeSinceFiringStart;
                 this.updateChart("Kiln Temperature", data.temperature, data.timeSinceFiringStart);
               }
               if (data.type == "duty_cycle_data"){
                 this.currentDutyCycle = data.duty_cycle;
+                this.timeSinceStart = data.timeSinceFiringStart;
                 this.updateChart('Kiln Duty Cycle', data.duty_cycle, data.timeSinceFiringStart);
               }
           };
