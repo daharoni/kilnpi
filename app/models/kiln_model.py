@@ -21,6 +21,9 @@ class SensorParameters(BaseModel):
 class DisplayParameters(BaseModel):
     temperature_display_period: float
     
+class DatabaseParameters(BaseModel):
+    logging_period: float
+    
 class KilnParameters(BaseModel):
     kiln_name: str
     pid_parameters: PIDParameters

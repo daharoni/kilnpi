@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                   label: 'Kiln Duty Cycle',
-                  data: this.dutyCycleData.map(point => ({x: point.time, y: point.duty_cycle})),
+                  data: this.dutyCycleData.map(point => ({x: point.time, y: point.dutyCycle})),
                   fill: false,
                   borderColor: 'rgb(75, 192, 192)',
                   borderWidth: 4,
@@ -298,8 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.updateChart("Kiln Temperature", data.temperature, data.timeSinceFiringStart);
               }
               if (data.type == "duty_cycle_data"){
-                this.currentDutyCycle = data.duty_cycle;
-                this.updateChart('Kiln Duty Cycle', data.duty_cycle, data.timeSinceFiringStart);
+                this.currentDutyCycle = data.dutyCycle;
+                this.updateChart('Kiln Duty Cycle', data.dutyCycle, data.timeSinceFiringStart);
               }
           };
         },
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
                   if (curveName == 'Kiln Duty Cycle') {
                     dataset.data.push({x: timestamp, y: yValue});
-                    this.dutyCycleData.push({time: timestamp, duty_cycle: yValue});
+                    this.dutyCycleData.push({time: timestamp, dutyCycle: yValue});
                   }
                   this.chart.update();
                 }  

@@ -21,5 +21,8 @@
     "display_parameters": {
         "temperature_display_period": 5.0
     },
+    "database_parameters": {
+        "logging_period": 5.0
+    },
     "notes": "This configuration is optimized for general ceramics firing. Adjust PID parameters based on specific requirements."
 }

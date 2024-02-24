@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import datetime
-from app.models.database_model import Firing, Base, TemperatureMeasurement
+from app.models.database_model import Firing, Base, KilnMeasurement
 from app.utils.global_state import temperature_broadcaster
 from app.models.sensor_model import TemperatureData
 
@@ -46,7 +46,7 @@ async def add_new_temperature_entry(temp_data: TemperatureData):
     db = SessionLocal()
     try:
         # Create a new TemperatureMeasurement instance
-        new_measurement = TemperatureMeasurement(
+        new_measurement = KilnMeasurement(
             experiment_id=db_firing_id,
             timestamp=temp_data.timestamp,
             temperature_kiln=temp_data.temperature

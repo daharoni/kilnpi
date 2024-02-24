@@ -9,10 +9,10 @@ from app.utils.global_state import last_temperature
 from app.utils.global_state import temperature_broadcaster
 from app.models.sensor_model import TemperatureData, DutyCycleData
 from datetime import datetime
-from app.routers.app_state import get_state
 from app.routers.app_state import current_state, get_kiln_parameters
 from app.hardware.pwm_relay import PWMRelay, gpio_class
 from app.services.websocket_manager import broadcast
+from app.models.sensor_model import DutyCyclePoint
 
 
 
@@ -106,6 +106,9 @@ async def run_kiln() -> None:
         time_since_last_display_update = timestamp - last_timestamp
         
         if (time_since_last_display_update.total_seconds() >= kiln_params.display_parameters.temperature_display_period):
+            if (current_state.isFiring):
+                newPoint = DutyCyclePoint(time=duty_cycle_data.timeSinceFiringStart, dutyCycle=duty_cycle_data.duty_cycle)
+                current_state.dutyCycleData.append(newPoint)
             await broadcast(duty_cycle_data.model_dump_json()) # Sends new temperature measurement to vue js 
             last_timestamp = timestamp
             

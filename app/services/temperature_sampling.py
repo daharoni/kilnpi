@@ -9,7 +9,7 @@ from app.utils.global_state import broadcast_new_temp, last_temperature
 from app.hardware.max31855 import MAX31855
 from app.hardware.spi_devices import spi_device_class
 from app.models.sensor_model import TemperatureData
-from app.models.firing_model import TemperatureProfilePoint
+from app.models.firing_profile_model import FiringProfilePoint
 from app.routers.app_state import current_state, get_kiln_parameters
 import logging
 from app.database import add_new_temperature_entry
@@ -53,13 +53,15 @@ async def poll_temperature_sensor() -> None:
         await broadcast_new_temp(last_temperature)
         
         if (current_state.isFiring):
-            newPoint = TemperatureProfilePoint(time=time_since_firing_start, temperature=max_ic_temp)
-            current_state.kilnTemperatureData.append(newPoint) # adds temp to state tracking to allow webpage refresh
+                      
             await add_new_temperature_entry(last_temperature)
         
         time_since_last_display_update = timestamp - last_timestamp
         
         if (time_since_last_display_update.total_seconds() >= kiln_params.display_parameters.temperature_display_period):
+            if (current_state.isFiring):
+                newPoint = FiringProfilePoint(time=time_since_firing_start, temperature=max_ic_temp)
+                current_state.kilnTemperatureData.append(newPoint) # adds temp to state tracking to allow webpage refresh
             await broadcast(last_temperature.model_dump_json()) # Sends new temperature measurement to vue js 
             last_timestamp = timestamp
        

@@ -25,7 +25,7 @@ else:
         def xfer2(self, data):
             # Return mock data appropriate for your application
             self.spi_response[0] += 1
-            if (self.spi_response[0] > 100):
+            if (self.spi_response[0] > 20):
                 self.spi_response[0] = 1
             return self.spi_response
         def close(self):

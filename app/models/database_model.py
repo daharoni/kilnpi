@@ -21,11 +21,11 @@ class Firing(Base):
     name = Column(String)
     start_time = Column(DateTime)
     firing_profile = Column(String)
-    measurements = relationship("TemperatureMeasurement", back_populates="firing")
+    measurements = relationship("KilnMeasurement", back_populates="firing")
 
-class TemperatureMeasurement(Base):
+class KilnMeasurement(Base):
     """
-    The TemperatureMeasurement class represents a table in the database that stores temperature measurements associated with a firing process.
+    The KilnMeasurement class represents a table in the database that stores temperature measurements associated with a firing process.
     """
     __tablename__ = 'temperature_measurements'
     

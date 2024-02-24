@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 import json
 from typing import List
 from ..services.profiles import get_firing_profiles, get_profile_by_id, updateProfile
-from ..models.firing_model import FiringProfile
+from ..models.firing_profile_model import FiringProfile
 from app.routers.app_state import current_state
 
 
