@@ -1,10 +1,12 @@
+import asyncio
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import datetime
-from app.models.database_model import Firing, Base, KilnMeasurement
+from app.models.database_model import Firing, Base, KilnMeasurement, LastKilnMeasurements
 from app.utils.global_state import temperature_broadcaster
 from app.models.sensor_model import TemperatureData
+from app.routers.app_state import get_kiln_parameters, current_state
 
 
 DATABASE_URL = "sqlite:///./data/sqlite.db"
@@ -13,6 +15,8 @@ DATABASE_URL = "sqlite:///./data/sqlite.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 db_firing_id = ''
+
+last_measurement = LastKilnMeasurements()
 
 def init_db():
     Base.metadata.create_all(bind=engine)
@@ -41,25 +45,39 @@ def add_new_firing(name: str):
     finally:
         db.close()
         
-async def add_new_temperature_entry(temp_data: TemperatureData):
+async def add_new_measuremnt_entry():
     global db_firing_id
+    global last_measurement
+    global current_state
+    
+    kiln_params = get_kiln_parameters()
+    
     db = SessionLocal()
-    try:
-        # Create a new TemperatureMeasurement instance
-        new_measurement = KilnMeasurement(
-            experiment_id=db_firing_id,
-            timestamp=temp_data.timestamp,
-            temperature_kiln=temp_data.temperature
-        )
+    while True:
+        if (current_state.isFiring):
+            if (db_firing_id == ''):
+                # Adds a new firing entry to the db for the first time after start of firing
+                add_new_firing(current_state.firingName)
+            try:
+                # Create a new TemperatureMeasurement instance
+                new_measurement = KilnMeasurement(
+                    experiment_id=db_firing_id,
+                    timestamp=last_measurement.time_since_start,
+                    temperature_kiln=last_measurement.kiln_temperaure,
+                    temperature_setpoint= last_measurement.setpoint_value,
+                    duty_cycle= last_measurement.duty_cycle
+                )
 
-        # Add the new temperature measurement to the session and commit
-        db.add(new_measurement)
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        print(f"Failed to add new temperature entry: {e}")
-    finally:
-        db.close()
+                # Add the new temperature measurement to the session and commit
+                db.add(new_measurement)
+                db.commit()
+            except Exception as e:
+                db.rollback()
+                print(f"Failed to add new temperature entry: {e}")
+            finally:
+                db.close()
+        
+        await asyncio.sleep(kiln_params.database_parameters.logging_period)
     
 # Initialize the database and create tables
 init_db()

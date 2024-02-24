@@ -5,7 +5,6 @@ import asyncio
 from typing import List, Dict, Any
 from pydantic import BaseModel
 from app.models.kiln_model import KilnParameters
-from app.utils.global_state import last_temperature
 from app.utils.global_state import temperature_broadcaster
 from app.models.sensor_model import TemperatureData, DutyCycleData
 from datetime import datetime
@@ -13,6 +12,7 @@ from app.routers.app_state import current_state, get_kiln_parameters
 from app.hardware.pwm_relay import PWMRelay, gpio_class
 from app.services.websocket_manager import broadcast
 from app.models.sensor_model import DutyCyclePoint
+from app.database.database import last_measurement
 
 
 
@@ -93,6 +93,11 @@ async def run_kiln() -> None:
                         duty_cycle_data.timestamp = datetime.now()
                         duty_cycle_data.timeSinceFiringStart = duty_cycle_data.timestamp - current_state.startFiringTime
                         duty_cycle_data.timeSinceFiringStart = duty_cycle_data.timeSinceFiringStart.total_seconds() / (60 * 60)
+                        
+                        last_measurement.duty_cycle = duty_cycle_data.duty_cycle
+                        last_measurement.setpoint_value = setpoint
+                        last_measurement.kiln_temperaure = kiln_temp_smoothed
+                        last_measurement.time_since_start = duty_cycle_data.timeSinceFiringStart
                         
                         if (duty_cycle_data.duty_cycle is not None):
                             pwm_relay.change_duty_cycle(duty_cycle_data.duty_cycle * 100)

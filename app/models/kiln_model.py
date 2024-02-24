@@ -31,4 +31,5 @@ class KilnParameters(BaseModel):
     safety_parameters: SafetyParameters
     sensor_parameters: SensorParameters
     display_parameters: DisplayParameters
+    database_parameters: DatabaseParameters
     notes: str

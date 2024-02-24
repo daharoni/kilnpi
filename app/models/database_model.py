@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, ForeignKey, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
+from pydantic import BaseModel
+from typing import Optional
 
 Base = declarative_base()
 
@@ -31,8 +33,14 @@ class KilnMeasurement(Base):
     
     measurement_id = Column(Integer, primary_key=True)
     experiment_id = Column(Integer, ForeignKey('firing.firing_id'))
-    timestamp = Column(DateTime)
+    timestamp = Column(Float)
     temperature_kiln = Column(Float)
     temperature_setpoint = Column(Float)
     duty_cycle = Column(Float)
     firing = relationship("Firing", back_populates="measurements")
+    
+class LastKilnMeasurements(BaseModel):
+    time_since_start: Optional[float] = None
+    kiln_temperaure: Optional[float] = None
+    setpoint_value: Optional[float] = None
+    duty_cycle: Optional[float] = None

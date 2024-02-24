@@ -8,6 +8,7 @@ from app.services.websocket_manager import connections, broadcast
 from app.services.temperature_sampling import poll_temperature_sensor
 from app.utils.logger import setup_logger
 from app.services.firing_runner import run_kiln
+from app.database.database import add_new_measuremnt_entry
 
 app = FastAPI()
 logger = setup_logger()
@@ -36,12 +37,13 @@ async def root():
 async def startup_event():
     asyncio.create_task(poll_temperature_sensor())
     asyncio.create_task(run_kiln())
+    asyncio.create_task(add_new_measuremnt_entry())
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # If you need to initialize the database at the start,
 # assuming you have a function in your database module for it:
-from app.database import init_db
+from app.database.database import init_db
 init_db()
 
 

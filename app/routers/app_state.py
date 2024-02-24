@@ -4,7 +4,6 @@ from fastapi import APIRouter, Body
 from app.models.app_state_model import AppState
 from app.services.profiles import updateProfile
 from datetime import datetime
-from app.database import add_new_firing
 from app.utils.global_state import get_temperature
 from app.models.kiln_model import KilnParameters
 
@@ -64,7 +63,6 @@ def start_firing(body: dict = Body(...)):
     global current_state
     
     current_state.firingName = body['firingName']
-    add_new_firing(current_state.firingName) # addes a new db entry for tracking this firing
     # TODO: start db logging and PID and GPIO control of relays
     current_state.isFiring = True
     current_state.startFiringTime = datetime.now()

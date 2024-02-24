@@ -12,9 +12,6 @@ from app.models.sensor_model import TemperatureData
 from app.models.firing_profile_model import FiringProfilePoint
 from app.routers.app_state import current_state, get_kiln_parameters
 import logging
-from app.database import add_new_temperature_entry
-
-
 
 
 # Initialize MAX31855 sensor (adjust bus and device numbers as necessary)
@@ -51,10 +48,6 @@ async def poll_temperature_sensor() -> None:
         )
         # logger.info(last_temperature)
         await broadcast_new_temp(last_temperature)
-        
-        if (current_state.isFiring):
-                      
-            await add_new_temperature_entry(last_temperature)
         
         time_since_last_display_update = timestamp - last_timestamp
         

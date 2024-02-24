@@ -4,7 +4,7 @@ from typing import Dict, Optional
 
 class DutyCyclePoint(BaseModel):
     time: float  # Hours 
-    dutyCycle: float  # Duty Cycle at the given time
+    duty_cycle: Optional[float] = None  # Duty Cycle at the given time
     
 class TemperatureData(BaseModel):
     """
