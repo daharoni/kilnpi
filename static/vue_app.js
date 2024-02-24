@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
                   if (curveName == 'Kiln Duty Cycle') {
                     dataset.data.push({x: timestamp, y: yValue});
-                    this.dutyCycleData.push({time: timestamp, duty_cycle: yValue});
+                    this.dutyCycleData.push({time: timestamp, duty_cycle: 100*yValue});
                   }
                   this.chart.update();
                 }  
