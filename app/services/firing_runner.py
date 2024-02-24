@@ -45,6 +45,11 @@ def get_profile_setpoint(time_since_start):
         count = 0
         time1 = 0
         temp1 = 0
+        if (profile['temperature_profile'][-1]['time'] <= time_since_start):
+            # Should turn off heating elements and let cool
+            print('End of firing reached. Cooling kiln now.')
+            return 0
+        
         for point in profile['temperature_profile']:
             if (point['time'] > time_since_start):
                 # Find which linear curve we are currently on

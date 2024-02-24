@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                   label: 'Kiln Duty Cycle',
-                  data: this.dutyCycleData.map(point => ({x: point.time, y: 100*point.duty_cycle})),
+                  data: this.dutyCycleData.map(point => ({x: point.time, y: point.duty_cycle})),
                   fill: false,
                   borderColor: 'rgb(75, 192, 192)',
                   borderWidth: 4,
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Duty Cycle (%)'
                   },
                   min: 0,
-                  max: 100,
+                  max: 1,
                   position: 'right',
                 }
               }
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
                   if (curveName == 'Kiln Duty Cycle') {
                     dataset.data.push({x: timestamp, y: yValue});
-                    this.dutyCycleData.push({time: timestamp, duty_cycle: 100*yValue});
+                    this.dutyCycleData.push({time: timestamp, duty_cycle: yValue});
                   }
                   this.chart.update();
                 }  

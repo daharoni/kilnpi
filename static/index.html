@@ -76,7 +76,7 @@
             <button @click="abortFiring" :disabled="!isFiring">Abort Firing</button>
         </div>
         <div>Current Temperature: {{ isNaN(parseFloat(currentTemperature)) ? '' : parseFloat(currentTemperature).toFixed(2) }} °C</div>
-        <div>Current Duty Cycle: {{ isNaN(parseFloat(currentDutyCycle)) ? '' : 100 * parseFloat(currentDutyCycle).toFixed(1) }}%</div>
+        <div>Current Duty Cycle: {{ isNaN(parseFloat(currentDutyCycle)) ? '' : 100 * parseFloat(currentDutyCycle).toFixed(3) }}%</div>
         <div>Time Running: {{ isNaN(parseFloat(timeSinceStart)) ? '' : parseFloat(timeSinceStart).toFixed(2) }} Hours</div>
         <input type="text" v-model="firingName" placeholder="Enter name or notes of firing">
         <div class="checkbox-container">
