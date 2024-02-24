@@ -112,7 +112,7 @@ async def run_kiln() -> None:
         
         if (time_since_last_display_update.total_seconds() >= kiln_params.display_parameters.temperature_display_period):
             if (current_state.isFiring):
-                newPoint = DutyCyclePoint(time=duty_cycle_data.timeSinceFiringStart, dutyCycle=duty_cycle_data.duty_cycle)
+                newPoint = DutyCyclePoint(time=duty_cycle_data.timeSinceFiringStart, duty_cycle=duty_cycle_data.duty_cycle)
                 current_state.dutyCycleData.append(newPoint)
             await broadcast(duty_cycle_data.model_dump_json()) # Sends new temperature measurement to vue js 
             last_timestamp = timestamp
