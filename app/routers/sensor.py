@@ -1,7 +1,7 @@
 from fastapi import APIRouter, BackgroundTasks, Depends
 from ..models.sensor_model import TemperatureData
 from sqlalchemy.orm import Session
-from database import get_db_session
+from app.database import get_db_session
 
 router = APIRouter()
 

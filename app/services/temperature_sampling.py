@@ -12,7 +12,7 @@ from app.models.sensor_model import TemperatureData
 from app.models.firing_model import TemperatureProfilePoint
 from app.routers.app_state import current_state, get_kiln_parameters
 import logging
-from database import add_new_temperature_entry
+from app.database import add_new_temperature_entry
 
 
 

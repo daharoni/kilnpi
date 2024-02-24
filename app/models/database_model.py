@@ -34,4 +34,5 @@ class TemperatureMeasurement(Base):
     timestamp = Column(DateTime)
     temperature_kiln = Column(Float)
     temperature_setpoint = Column(Float)
+    duty_cycle = Column(Float)
     firing = relationship("Firing", back_populates="measurements")

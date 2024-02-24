@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body
 from app.models.app_state_model import AppState
 from app.services.profiles import updateProfile
 from datetime import datetime
-from database import add_new_firing
+from app.database import add_new_firing
 from app.utils.global_state import get_temperature
 from app.models.kiln_model import KilnParameters
 
