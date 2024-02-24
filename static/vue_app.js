@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Duty Cycle (%)'
                   },
                   min: 0,
-                  max: 100,
+                  max: 1,
                   position: 'right',
                 }
               }

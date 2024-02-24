@@ -63,10 +63,10 @@ async def updateProfile(state: AppState):
             if state.isFiring:
                 firingStartTemperature = state.startFiringTemperatureData.temperature
                 modified_profile['temperature_profile'].insert(0, dict(time= 0.0, temperature= firingStartTemperature))
-                modified_profile['temperature_profile'].insert(1, dict(time= 0.33, temperature= firingStartTemperature + 4.0))
+                modified_profile['temperature_profile'].insert(1, dict(time= 0.10, temperature= firingStartTemperature + 4.0))
             else:
                 modified_profile['temperature_profile'].insert(0, dict(time= 0.0, temperature= baseTemp.temperature))
-                modified_profile['temperature_profile'].insert(1, dict(time= 0.33, temperature= baseTemp.temperature + 4.0))
+                modified_profile['temperature_profile'].insert(1, dict(time= 0.10, temperature= baseTemp.temperature + 4.0))
             if isDry:
                 # add in a 15 minute dry period at 100 C
                 dry_temp = 100

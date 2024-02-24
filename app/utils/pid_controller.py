@@ -32,7 +32,7 @@ class PIDController:
                 self.previous_error = error
                 self.last_time = current_time
                 
-                logger.info(f"PID Controller: kiln_temp= {measured_value}, setpoint= {setpoint}, duty cyle= {output}, p= {error}, i= {self.integral}, d= {derivative}")
+                print(f"PID Controller: kiln_temp= {measured_value}, setpoint= {setpoint}, duty cyle= {output}, p= {error}, i= {self.integral}, d= {derivative}")
                 return output
             else:
                 return None
