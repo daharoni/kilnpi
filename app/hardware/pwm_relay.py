@@ -108,6 +108,7 @@ class PWMRelay:
         if self.pwm is None:
             self.pwm = self.GPIO.PWM(self.pin, self.frequency)
             self.pwm.start(duty_cycle)
+            
         else:
             self.pwm.ChangeDutyCycle(duty_cycle)
         self.isRunning = True

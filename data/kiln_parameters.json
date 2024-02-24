@@ -4,12 +4,12 @@
         "Kp": 0.01,
         "Ki": 0.001,
         "Kd": 0.005,
-        "period": 1,
+        "period": 2.5,
         "min_duty_cycle": 0,
-        "max_duty_cycle": 2.5
+        "max_duty_cycle": 1.0
     },
     "pwm_settings": {
-        "period": 5
+        "period": 5.0
     },
     "safety_parameters": {
         "max_temperature": 1300,
