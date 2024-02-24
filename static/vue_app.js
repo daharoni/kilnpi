@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 zoom: {
                   limits: {
                     x: {min: 0, max: 24},
-                    y: {min: 0, max: 1300}
+                    y: {min: 0, max: 1300},
+                    y1: {min: 0, max: 1}
                   },
                   zoom: {
                       wheel: {

@@ -1,7 +1,7 @@
 {
     "kiln_name": "JenKen-Kiln 9-11",
     "pid_parameters": {
-        "Kp": 0.025,
+        "Kp": 0.05,
         "Ki": 0.00002,
         "Kd": 0.01,
         "period": 2.5,
